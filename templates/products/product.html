@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{{ super() }}
+{% block title %}{{ product.title }}{% endblock %}
+{% block content %}
+    {{ product.title }}
+    <div class="w-50 mx-auto">
+    {% for picture in product.pictures %}
+        <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" alt="..." class="img-thumbnail"/>
+    {% endfor %}
+    </div>
+    {{ product.price }}-{{ product.discount }}={{ product.price - product.discount }}<br>
+    На складі {{ product.stock }}
+    <table class="table table-striped">
+        <tbody>
+        {% for spec in product.specs %}
+            <tr>
+                <td>{{ spec }}</td>
+                <td>{{ product.specs[spec] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+{{ super() }}
+{% block title %}Профіль{% endblock %}
+{% block content %}
+    {% for field in form %}
+    {% if field.errors %}
+    {% for error in field.errors %}
+    <div class="alert alert-danger">
+    {{ error }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+<div class="mx-auto col-lg-4 col-md-8 col-sm-12">
+<!--    <div class="mx-auto col-6">-->
+        <h1 class="display-6">Профіль</h1>
+<!--    </div>-->
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <label>Назва профіля</label>
+        <span class="form-control mb-3">{{ user.username }}</span>
+        <label>Електронна пошта</label>
+        <span class="form-control mb-5">{{ user.email }}</span>
+        <div class="mb-3">
+            <button class="btn btn-primary w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                Змінити пароль
+            </button>
+            <div class="collapse" id="collapseExample">
+                {{ form.old_password.label }} {{ form.old_password(class_="form-control mb-2") }}
+                {{ form.new_password.label }} {{ form.new_password(class_="form-control mb-2") }}
+                {{ form.confirm_password.label }} {{ form.confirm_password(class_="form-control") }}
+            </div>
+        </div>
+        {{ form.phone.label }} {{ form.phone(class_="form-control mb-3") }}
+        {{ form.firstname.label }} {{ form.firstname(class_="form-control mb-3") }}
+        {{ form.settlement.label }} {{ form.settlement(class_="form-control mb-3") }}
+        {{ form.address.label }} {{ form.address(class_="form-control mb-2") }}
+        {{ form.submit(class_="w-100 px-auto btn btn-primary") }}
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{{ super() }}
+{% block title %}Index{% endblock %}
+{% block content %}
+<div class="mx-auto col-lg-4 col-md-8 col-sm-12">
+    <h1 class="display-6">Вхід</h1>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        {{ form.username.label }} {{ form.username(class_="form-control mb-2") }}
+        {{ form.password.label }} {{ form.password(class_="form-control") }}
+        <div><a href="{{ url_for('forgot_password_send') }}" class="mb-3">Відновити пароль</a></div>
+        {{ form.remember_me(class_="form-check-input mb-2") }} {{ form.remember_me.label(class="form-check-label") }}
+        {{ form.submit(class_="w-100 px-auto btn btn-primary") }}
+    </form>
+<!--    <div class="mb-3">-->
+<!--        <button class="btn btn-primary w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">-->
+<!--            Не пам'ятаю пароль-->
+<!--        </button>-->
+<!--        <div class="collapse" id="collapseExample">-->
+
+<!--        </div>-->
+<!--    </div>-->
+</div>
+{% endblock %}

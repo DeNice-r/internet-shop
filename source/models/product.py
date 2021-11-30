@@ -1,0 +1,29 @@
+import datetime
+from app import db
+
+
+# Створюємо модель товару
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(256), nullable=False)
+    pictures = db.Column(db.JSON, default='[]', nullable=False)
+    price = db.Column(db.Float, nullable=False, default=0)
+    discount = db.Column(db.Float, nullable=False, default=0)
+    stock = db.Column(db.Integer, default=1, nullable=False)
+    specs = db.Column(db.JSON, default='{}', nullable=False)
+    desc = db.Column(db.Text, nullable=True)
+    updated = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
+
+    def __init__(self, title, pictures=None, price=None, discount=None, stock=None, specs=None, desc=None):
+        self.title = title
+        self.pictures = pictures
+        self.price = price
+        self.discount = discount
+        self.stock = stock
+        self.specs = specs
+        self.desc = desc
+
+    def in_stock(self):
+        return self.stock > 0
+
+# TODO: додати відгуки про товар

@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{{ super() }}
+{% block title %}Товари{% endblock %}
+{% block content %}
+    <div class="row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-4">
+        {% for product in products %}
+            {% set picture = product.pictures[0] %}
+            <div class="col">
+                <div class="card h-100">
+                    <img src="{# плейсхолдер, якщо картинки немає #}
+                        {{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.title }}</h5>
+                        <p class="card-text">{{ product.desc }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <a {# повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-success w-100">Додати у корзину</a>
+                        {% if user.is_authenticated and user.has_role('editor') %}
+                            <a {# повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-warning w-100 mt-1">Редагувати</a>
+                            <a {# повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-danger w-100 mt-1">Видалити</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {# TODO: Кнопки для переключення між сторінками #}
+    {{ number_of_pages }}
+{% endblock %}
