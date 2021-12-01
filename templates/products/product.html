@@ -9,6 +9,7 @@
     {% endfor %}
     </div>
     {{ product.price }}-{{ product.discount }}={{ product.price - product.discount }}<br>
+    {{ product.desc }}<br>
     На складі {{ product.stock }}
     <table class="table table-striped">
         <tbody>
@@ -20,4 +21,6 @@
         {% endfor %}
         </tbody>
     </table>
+
+
 {% endblock %}
