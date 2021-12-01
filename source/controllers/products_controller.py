@@ -1,7 +1,7 @@
 import json
 
 from app import app, db
-from flask import render_template
+from flask import render_template, abort
 from models.product import Product
 from math import ceil
 
@@ -21,16 +21,19 @@ def products(page: int):
     #                  "перед однокласниками.")
     # db.session.add(p)
     # db.session.commit()
+
+    products = Product.query.order_by('id').limit(items_per_page).offset(page * items_per_page).all()
+
+    if not products:
+        abort(404)
+
     return render_template("products/products.html",
-                           products=Product.query.limit(items_per_page).offset(page * items_per_page).all(),
-                           number_of_pages=ceil(Product.query.count() / items_per_page)
+                           products=products,
+                           number_of_pages=ceil(Product.query.count() / items_per_page),
+                           page=page+1
                            )
 
 
 @app.route("/product/<int:id>")
 def product(id: int):
-    ps = Product.query.all()
-    for p in ps:
-        p.pictures = ['amogus-portfel.jpg']
-    db.session.commit()
     return render_template("products/product.html", product=Product.query.get(id), json=json)

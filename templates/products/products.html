@@ -2,10 +2,10 @@
 {{ super() }}
 {% block title %}Товари{% endblock %}
 {% block content %}
-    <div class="row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-4">
+    <div class="row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-4 mb-3">
         {% for product in products %}
             {% set picture = product.pictures[0] %}
-            <div class="col">
+            <div class="col" onclick="location.href='{{ url_for('product', id=product.id) }}';">
                 <div class="card h-100">
                     <img src="{# плейсхолдер, якщо картинки немає #}
                         {{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" class="card-img-top" alt="...">
@@ -14,16 +14,57 @@
                         <p class="card-text">{{ product.desc }}</p>
                     </div>
                     <div class="card-footer">
-                        <a {# повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-success w-100">Додати у корзину</a>
+                        <a {# TODO: повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-success w-100">Додати у корзину</a>
                         {% if user.is_authenticated and user.has_role('editor') %}
-                            <a {# повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-warning w-100 mt-1">Редагувати</a>
-                            <a {# повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-danger w-100 mt-1">Видалити</a>
+                            <a {# TODO: повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-warning w-100 mt-1">Редагувати</a>
+                            <a {# TODO: повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-danger w-100 mt-1">Видалити</a>
                         {% endif %}
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
-    {# TODO: Кнопки для переключення між сторінками #}
-    {{ number_of_pages }}
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {# Кнопка назад, не активна коли ми знаходимося на першій сторінці #}
+            <li class="page-item {{ 'disabled' if page==1 }}">
+                <a class="page-link" href="{{ url_for('products', page=page-1) }}">Назад</a>
+            </li>
+
+            {% if page > 4 %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('products', page=1) }}">{{ 1 }}</a></li>
+            {% endif %}
+
+            {% if page > 5 %}
+                <li class="page-item disabled"><a class="page-link disabled">...</a></li>
+            {% endif %}
+
+            {% for p in range(page - 3, page) if p >= 1 %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('products', page=p) }}">{{ p }}</a></li>
+            {% endfor %}
+
+            <li class="page-item active">
+                <a class="page-link" href="{{ url_for('products', page=page) }}">{{ page }}</a>
+            </li>
+
+            {% for p in range(page + 1, page + 4) if p < number_of_pages %}
+                <li class="page-item"><a class="page-link" href="{{ url_for('products', page=p) }}">{{ p }}</a></li>
+            {% endfor %}
+
+            {% if page < number_of_pages - 4 %}
+                <li class="page-item disabled"><a class="page-link">...</a></li>
+            {% endif %}
+
+            {% if page != number_of_pages %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ url_for('products', page=number_of_pages) }}">{{ number_of_pages }}</a>
+                </li>
+            {% endif %}
+
+            <li class="page-item {{ 'disabled' if page==number_of_pages }}">
+                <a class="page-link" href="{{ url_for('products', page=page + 1) }}">Далі</a>
+            </li>
+        </ul>
+    </nav>
+    {{ number_of_pages }} {{ page }}
 {% endblock %}

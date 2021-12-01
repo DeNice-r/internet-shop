@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Ошибочка вышла</title>
-</head>
-<body>
-<div style="position: absolute; display: inline-block; margin-left: 23%; margin-top: 10%;">
-    <img src={{url_for('static', filename='404.png')}} alt="404"/>
-</div>
-</body>
-</html>
+{% extends "layout.html" %}
+{{ super() }}
+{% block title %}Помилка{% endblock %}
+{% block content %}
+    <img class="d-block rounded mx-auto my-auto" src="{{ url_for('static', filename='404.png') }}" alt="404"/>
+{% endblock %}
