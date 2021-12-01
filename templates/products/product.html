@@ -2,15 +2,17 @@
 {{ super() }}
 {% block title %}{{ product.title }}{% endblock %}
 {% block content %}
-    {{ product.title }}
+    {{ product.title }}<br>
+    {{ product.desc }}
     <div class="w-50 mx-auto">
-    {% for picture in product.pictures %}
-        <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" alt="..." class="img-thumbnail"/>
-    {% endfor %}
+        {% for picture in product.pictures %}
+            <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" alt="..." class="img-thumbnail"/>
+        {% endfor %}
     </div>
     {{ product.price }}-{{ product.discount }}={{ product.price - product.discount }}<br>
     {{ product.desc }}<br>
     На складі {{ product.stock }}
+    <h1>Характеристики</h1>
     <table class="table table-striped">
         <tbody>
         {% for spec in product.specs %}
