@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{{ super() }}
+{% block title %}Товари{% endblock %}
+{% block content %}
+    <script>
+        const csrf_token = "{{ csrf_token() }}";
+        {# Змінити задані query-параметри (для відтворення сторінки при передачі посилання іншому користувачу) #}
+        function setUrlParam(param, value) {
+            let searchParams = new URLSearchParams(window.location.search);
+            searchParams.set(param, value);
+            window.history.pushState({"page": 1+getUrlParam('page')},"", location.pathname + "?" + searchParams.toString());
+            {# TODO: on history state change load page again #}
+            {# TODO: on history state change load page again #}
+        }
+
+        function getUrlParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        function load_page(page=-1){
+            let request = new XMLHttpRequest(),
+                container = document.querySelector('#products');
+
+            if (page === -1){
+                page = getUrlParam('page');
+                if (!page){
+                    page = 1;
+                    setUrlParam('page', page);
+                }
+            }
+            else {
+                setUrlParam('page', page)
+            }
+
+            request.open('post', '/api/get_products');
+            request.setRequestHeader('Content-Type', 'text/html');
+            request.setRequestHeader('X-CSRFToken', csrf_token);
+            request.setRequestHeader('page', page.toString());
+            window.scrollTo({top: 0, behavior: 'smooth'});
+            request.onload = (e) => {
+                container.innerHTML = request.response;
+                page = +container.querySelector('#current_page').innerHTML;
+                setUrlParam('page', page);
+            }
+            container.innerHTML = '<div class="d-flex justify-content-center">\
+                                       <div class="spinner-border text-primary">\
+                                       </div>\
+                                   </div>';
+            request.send();
+        }
+    </script>
+    <div class="card mb-4">
+        <h5 class="card-header">Пошук</h5>
+        <div class="card-body">
+            <form class="row row-cols-auto g-3 align-items-center col-12" method="get">
+                <div class="col-12">
+                    <div class="input-group">
+                        <input type="text" name="q" class="form-control" id="inlineFormInputGroupUsername" placeholder="Частина назви товару, його повна назва, частина опису або ID">
+                        {# AJAX запит на сервер (модифікувати load_page щоб він отримував усі параметри, задані у пошуку) #}
+                        <input type="submit" class="btn btn-primary" value="Шукати">
+                    </div>
+                </div>
+            </form>
+            <h5 class="card-title">Параметри пошуку</h5>
+            <p>Кількість товарів на сторінці, аск-деск порядок, по новизні, по алфавіту, по ціні, по уцінці, по % уцінки</p>
+            <p>ціна від - до</p>
+            <a href="#" class="btn btn-primary">Удалить цю кнопку</a>
+        </div>
+    </div>
+    <div id="products">
+    </div>
+
+
+    <script>
+        load_page()
+    </script>
+{% endblock %}

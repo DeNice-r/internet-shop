@@ -18,9 +18,9 @@
     <form method="post">
         {{ form.hidden_tag() }}
         <label>Назва профіля</label>
-        <span class="form-control mb-3">{{ user.username }}</span>
+        <span class="form-control mb-3" readonly>{{ user.username }}</span>
         <label>Електронна пошта</label>
-        <span class="form-control mb-5">{{ user.email }}</span>
+        <span class="form-control mb-5" readonly>{{ user.email }}</span>
         <div class="mb-3">
             <button class="btn btn-primary w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                 Змінити пароль

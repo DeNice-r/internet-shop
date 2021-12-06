@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <script src="{{ url_for('static', filename='/bootstrap/bootstrap.min.js') }}"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='/bootstrap/bootstrap.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='/styles/style.css') }}"/>
+    <script type="text/javascript" src="{{ url_for('static', filename='/bootstrap/bootstrap.bundle.min.js') }}"></script>
     <title>{% block title %}{% endblock %} - IShop</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='mdb5/css/hover_shadow.min.css') }}" />
@@ -12,14 +13,13 @@
 <body>
 {% block navbar %}
     <header class="mb-3 fixed-top position-sticky">
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow">
+        <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom box-shadow">
             <div class="container">
                 <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='favicon.ico') }}" style="width: 30px; height: 30px;"></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex">
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="{{ url_for('index') }}">Головна</a>
@@ -59,11 +59,11 @@
     </header>
 {% endblock %}
 <div class="container">
-{% for classes, message in get_flashed_messages(with_categories=True) %}
-<div class="alert alert-{{ classes }} message">{{ message | safe }}</div>
-{% endfor %}
-{% block content %}
-{% endblock %}
+    {% for classes, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ classes }} message">{{ message | safe }}</div>
+    {% endfor %}
+    {% block content %}
+    {% endblock %}
 </div>
 </body>
 </html>
