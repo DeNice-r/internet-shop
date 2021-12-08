@@ -1,6 +1,6 @@
 import datetime
 from app import db, lm
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 import json
 
 
@@ -46,3 +46,11 @@ class User(db.Model, UserMixin):
 @lm.user_loader
 def user_loader(user_id):
     return User.query.get(user_id)
+
+
+class AnonymousUser(AnonymousUserMixin):
+    def has_role(self, role):
+        return False
+
+
+lm.anonymous_user = AnonymousUser

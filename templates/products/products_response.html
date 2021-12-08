@@ -1,17 +1,17 @@
-<div class="row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-4 mb-4">
+<div class="row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-3 mb-4">
     {% for product in products %}
         {% if product.pictures %}
             {% set picture = product.pictures[0] %}
         {% endif %}
         <div class="col">
             <div class="card h-100 {{ 'hover-shadow' if product.in_stock() }}" style="cursor: pointer; {{ 'color: gray;' if not product.in_stock() }}" onclick="location.href='{{ url_for('product', product_id=product.id) }}'">
-                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) if picture else url_for('static', filename='placeholder.png') }}"
+                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture if picture else 'placeholder.png') }}"
                      class="card-img-top"
-                     style="{{ 'filter: grayscale(100%)' if not product.in_stock() }}"
+                     {{ 'style="filter: grayscale(100%)"'|safe if not product.in_stock() }}
                      alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.title }}</h5>
-                    <p class="card-text">{{ product.desc }}</p>
+                    <p class="card-text">{{ product.desc|truncate(125) }}</p>
                 </div>
                 <div class="card-footer">
                     <a {# TODO: повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-success w-100 {{ 'disabled' if not product.in_stock() }}">Додати у корзину</a>
@@ -27,23 +27,23 @@
 <ul class="pagination justify-content-center">
     <li class="page-item {{ 'disabled' if page == 1  }}"><button class="page-link" onclick="load_page( {{ page-1 }} )">Назад</button></li>
     {% if page > 1 %}
-        <li class="page-item"><a class="page-link" onclick="load_page({{ 1 }})">1</a></li>
+        <li class="page-item"><button class="page-link" onclick="load_page({{ 1 }})">1</button></li>
     {% endif %}
     {% if page > 4 %}
-        <li class="page-item disabled"><a class="page-link">...</a></li>
+        <li class="page-item disabled"><button class="page-link">...</button></li>
     {% endif %}
     {% for p in range(page - 3, page) if p > 1 %}
-        <li class="page-item"><a class="page-link" onclick="load_page({{ p }})">{{ p }}</a></li>
+        <li class="page-item"><button class="page-link" onclick="load_page({{ p }})">{{ p }}</button></li>
     {% endfor %}
-    <li class="page-item active"><a class="page-link" id="current_page" onclick="load_page({{ page }})">{{ page }}</a></li>
+    <li class="page-item active"><a class="btn page-link" id="current_page" href="#">{{ page }}</a></li>
     {% for p in range(page + 1, page + 4) if p < number_of_pages %}
-        <li class="page-item"><a class="page-link" onclick="load_page({{ p }})">{{ p }}</a></li>
+        <li class="page-item"><button class="page-link" onclick="load_page({{ p }})">{{ p }}</button></li>
     {% endfor %}
     {% if page < number_of_pages - 4 %}
-        <li class="page-item disabled"><a class="page-link">...</a></li>
+        <li class="page-item disabled"><button class="page-link">...</button></li>
     {% endif %}
     {% if page < number_of_pages %}
-        <li class="page-item"><a class="page-link" onclick="load_page({{ number_of_pages }})">{{ number_of_pages }}</a></li>
+        <li class="page-item"><button class="page-link" onclick="load_page({{ number_of_pages }})">{{ number_of_pages }}</button></li>
     {% endif %}
     <li class="page-item {{ 'disabled' if page == number_of_pages }}">
         <button class="page-link" onclick="load_page({{ page }} + 1)">Вперед</button>

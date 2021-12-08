@@ -19,6 +19,7 @@
         }
 
         function load_page(page=-1){
+            window.scrollTo({top: 0, behavior: 'smooth'});
             let request = new XMLHttpRequest(),
                 container = document.querySelector('#products');
 
@@ -37,7 +38,6 @@
             request.setRequestHeader('Content-Type', 'text/html');
             request.setRequestHeader('X-CSRFToken', csrf_token);
             request.setRequestHeader('page', page.toString());
-            window.scrollTo({top: 0, behavior: 'smooth'});
             request.onload = (e) => {
                 container.innerHTML = request.response;
                 page = +container.querySelector('#current_page').innerHTML;

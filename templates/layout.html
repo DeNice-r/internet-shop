@@ -1,20 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='/bootstrap/bootstrap.min.css') }}"/>
-    <link rel="stylesheet" href="{{ url_for('static', filename='/styles/style.css') }}"/>
-    <script type="text/javascript" src="{{ url_for('static', filename='/bootstrap/bootstrap.bundle.min.js') }}"></script>
-    <title>{% block title %}{% endblock %} - IShop</title>
+    {% block head %}
+        <meta charset="UTF-8">
+        {% block style %}
+            <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='/bootstrap/bootstrap.min.css') }}"/>
+            <link rel="stylesheet" href="{{ url_for('static', filename='/styles/style.css') }}"/>
+            <link rel="stylesheet" href="{{ url_for('static', filename='mdb5/css/hover_shadow.min.css') }}" />
+        {% endblock %}
+        {% block script %}
+            <script type="text/javascript" src="{{ url_for('static', filename='/bootstrap/bootstrap.bundle.min.js') }}"></script>
+        {% endblock %}
+        <title>{% block title %}{% endblock %} - IShop</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='mdb5/css/hover_shadow.min.css') }}" />
+    {% endblock %}
 </head>
 <body>
 {% block navbar %}
     <header class="mb-3 fixed-top position-sticky">
         <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom box-shadow">
-            <div class="container">
+            <div class="container-lg">
                 <a class="navbar-brand" href="/"><img src="{{ url_for('static', filename='favicon.ico') }}" style="width: 30px; height: 30px;"></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -58,7 +64,7 @@
         </nav>
     </header>
 {% endblock %}
-<div class="container">
+<div class="container-lg">
     {% for classes, message in get_flashed_messages(with_categories=True) %}
         <div class="alert alert-{{ classes }} message">{{ message | safe }}</div>
     {% endfor %}

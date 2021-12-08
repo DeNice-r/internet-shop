@@ -2,30 +2,105 @@
 {{ super() }}
 {% block title %}{{ product.title }}{% endblock %}
 {% block content %}
-    {{ product.title }}<br>
-    {{ product.desc }}
-    <div class="w-50 mx-auto">
-        {% for picture in product.pictures %}
-            <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" alt="..." class="img-thumbnail"/>
-        {% else %}
-            <img src="{{ url_for('static', filename='placeholder.png') }}" alt="..." class="img-thumbnail"
-            />
-        {% endfor %}
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-sm-12 col-xl-5">
+                <div id="carouselPhoto" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators carousel">
+{#                        <button type="button" data-bs-target="#carouselPhoto" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 0"></button>#}
+{#                        {% for index in range(1, product.pictures|length) %}#}
+{#                            <button type="button" data-bs-target="#carouselPhoto" data-bs-slide-to="{{ index }}" aria-label="Slide {{ index }}"></button>#}
+{#                        {% endfor %}#}
+
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active">
+                            <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else 'placeholder.png') }}" class="d-block w-100" alt="..."/>
+                        </div>
+                        {% for picture in product.pictures[1:] %}
+                            <div class="carousel-item">
+                                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" class="d-block w-100  thumb-post" alt="..."/>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselPhoto" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Далі</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselPhoto" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Назад</span>
+                    </button>
+                </div>
+            </div>
+            <div class="col-sm-12 col-xl-7">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ product.title }}
+                        {% if user.has_role('editor') %}
+                            <button class="btn btn-warning">✏</button>
+                        {% endif %}
+                        <span class="text-muted small float-end">#{{ product.id }}</span>
+                    </h5>
+                    <p class="card-text">
+                        {{ product.desc }}
+                        {% if user.has_role('editor') %}
+                            <button class="btn btn-warning">✏</button>
+                        {% endif %}
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted">В наявності: {{ product.stock }}</small>
+                        {% if user.has_role('editor') %}
+                            <button class="btn btn-warning">✏</button>
+                        {% endif %}
+                    </p>
+                    <p class="card-text border-top p-2">
+                        {# TODO: Адмін має бачити уцінку у будь-якому випадку #}
+                        {% if product.discount != 0 %}
+                            <s class="small">
+                                {{ product.price }}
+                            </s>
+                            {% if user.has_role('editor') %}
+                                <button class="btn btn-warning">✏</button>
+                            {% endif %}
+                            <span class="btn btn-danger text btn-sm">
+                                <span class="small">{{ "%.2f" | format(-(product.discount*100/product.price)) }}%</span>
+                                {% if user.has_role('editor') %}
+                                    <button class="btn btn-warning">✏</button>
+                                {% endif %}
+                            </span>
+                            {{ ("₴%.2f")|format(product.price - product.discount) }}
+                        {% else %}
+                            ₴{{ product.price }}
+                        {% endif %}
+                        <button class="btn btn-success float-end">Купити</button>
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-12 col-xl-5">
+                {% for picture in product.pictures %}
+                    <button type="button" data-bs-target="#carouselPhoto" data-bs-slide-to="{{ index }}" aria-label="Slide {{ index }}"><img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" class="img-thumbnail my-img-thumbnail" alt="..."></button>
+                {% endfor %}
+            </div>
+            <div class="col-12 border-top">
+                <h5 class="card-title text-center mt-3">Характеристики</h5>
+                <table class="table table-striped mb-0">
+                    <tbody>
+                    {% for spec in product.specs %}
+                        <tr>
+                            <td>{{ spec }}</td>
+                            <td>{{ product.specs[spec] }}</td>
+                            {% if user.has_role('editor') %}
+                                <td>
+                                    <button class="btn btn-danger float-end">❎</button>
+                                    <button class="btn btn-warning float-end">✏</button>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    {{ product.price }}-{{ product.discount }}={{ product.price - product.discount }}<br>
-    {{ product.desc }}<br>
-    На складі {{ product.stock }}
-    <h1>Характеристики</h1>
-    <table class="table table-striped">
-        <tbody>
-        {% for spec in product.specs %}
-            <tr>
-                <td>{{ spec }}</td>
-                <td>{{ product.specs[spec] }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-
 {% endblock %}

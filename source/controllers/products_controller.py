@@ -34,7 +34,7 @@ def products():
 @app.route("/api/get_products", methods=('POST',))
 def get_products():
     # time.sleep(1)
-    items_per_page = 6
+    items_per_page = 8
     page = request.headers.get('page')
     page = int(page) - 1 if page else 0
     product_list = Product.query.order_by(Product.stock.desc(), Product.id.desc()).limit(items_per_page).offset(

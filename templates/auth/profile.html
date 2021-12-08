@@ -13,7 +13,7 @@
     {% endfor %}
 <div class="mx-auto col-lg-4 col-md-8 col-sm-12">
 <!--    <div class="mx-auto col-6">-->
-        <h1 class="display-6">Профіль</h1>
+        <h1 class="display-6">Профіль <span class="text-muted small float-end">#{{ user.id }}</span></h1>
 <!--    </div>-->
     <form method="post">
         {{ form.hidden_tag() }}
