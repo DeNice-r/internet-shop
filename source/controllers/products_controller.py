@@ -50,7 +50,7 @@ def get_products():
                            page=page + 1)
 
 
-@app.route("/product/<int:product_id>")
+@app.route("/product/<int:product_id>", methods=('GET', 'POST'))
 def product(product_id: int):
     return render_template("products/product.html", product=Product.query.get(product_id))
 

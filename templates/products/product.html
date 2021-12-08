@@ -6,13 +6,6 @@
         <div class="row g-0">
             <div class="col-sm-12 col-xl-5">
                 <div id="carouselPhoto" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-indicators carousel">
-{#                        <button type="button" data-bs-target="#carouselPhoto" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 0"></button>#}
-{#                        {% for index in range(1, product.pictures|length) %}#}
-{#                            <button type="button" data-bs-target="#carouselPhoto" data-bs-slide-to="{{ index }}" aria-label="Slide {{ index }}"></button>#}
-{#                        {% endfor %}#}
-
-                    </div>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else 'placeholder.png') }}" class="d-block w-100" alt="..."/>
@@ -31,6 +24,25 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Назад</span>
                     </button>
+                    <ol class="carousel-indicators list-inline">
+                        <li class="list-inline-item active">
+                            <a class="active"  data-bs-slide-to="0" aria-current="true" data-bs-target="#carouselPhoto">
+                                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures[0]) }}" class="img-fluid my-img-thumbnail" alt="...">
+                            </a>
+                        </li>
+                        {% for picture in product.pictures[1:] %}
+                            <li class="list-inline-item">
+                                <a data-bs-slide-to="{{ loop.index }}" data-bs-target="#carouselPhoto">
+                                    <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" class="img-fluid my-img-thumbnail" alt="...">
+                                </a>
+                            </li>
+                        {% endfor %}
+                        <li class="list-inline-item">
+                            <a>
+                                <img src="{{ url_for('static', filename='placeholder.png') }}" class="img-fluid my-img-thumbnail" alt="...">
+                            </a>
+                        </li>
+                    </ol>
                 </div>
             </div>
             <div class="col-sm-12 col-xl-7">
@@ -78,9 +90,7 @@
                 </div>
             </div>
             <div class="col-sm-12 col-xl-5">
-                {% for picture in product.pictures %}
-                    <button type="button" data-bs-target="#carouselPhoto" data-bs-slide-to="{{ index }}" aria-label="Slide {{ index }}"><img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" class="img-thumbnail my-img-thumbnail" alt="..."></button>
-                {% endfor %}
+                <input type="file" class="form-control" multiple>
             </div>
             <div class="col-12 border-top">
                 <h5 class="card-title text-center mt-3">Характеристики</h5>
@@ -103,4 +113,5 @@
             </div>
         </div>
     </div>
+    <button class="btn btn-success form-control mb-3">Зберегти</button>
 {% endblock %}

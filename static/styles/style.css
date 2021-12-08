@@ -11,6 +11,11 @@
 }
 
 .my-img-thumbnail{
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 80px;
+}
+
+#carouselPhoto .carousel-indicators {
+    position: static;
+    margin-top: 10px;
 }
