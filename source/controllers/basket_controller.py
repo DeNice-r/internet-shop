@@ -1,7 +1,9 @@
-from app import app
-from flask import render_template
+from flask import render_template, Blueprint
 
 
-@app.route("/basket")
-def basket():
-    return render_template("basket/basket.html")
+basket = Blueprint('basket', __name__)
+
+
+@basket.route("/basket")
+def index():
+    return render_template("basket/index.html")

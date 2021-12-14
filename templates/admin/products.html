@@ -1,0 +1,60 @@
+{% extends "admin/admin_layout.html" %}
+{{ super() }}
+{% block title %}Товари{% endblock %}
+{% block content %}
+    <table class="table table-sm table-responsive table-bordered table-striped table-light table-hover mb-0">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Фото</th>
+            <th>Назва</th>
+            <th>Опис</th>
+            <th>Ціна</th>
+            <th>Знижка</th>
+            <th>В наявності</th>
+            <th>Характеристики</th>
+            <th>Востаннє оновлено</th>
+        </tr>
+        <tr>
+            <form>
+                <th><input name="id" type="text"></th>
+                <th></th>
+                <th><input name="title" type="text"></th>
+                <th><input name="desc" type="text"></th>
+                <th><input name="price" type="text"></th>
+                <th><input name="discount" type="text"></th>
+                <th><input name="stock" type="text"></th>
+                <th><input name="specs" type="text"></th>
+                <th><input name="updated" type="text"></th>
+                <input type="submit" hidden>
+            </form>
+        </tr>
+        </thead>
+        <tbody>
+        {% if products is not iterable %}
+            {% set products = [products] %}
+        {% endif %}
+        {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td style="width: 100px">
+                    <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}"
+                         class="d-block w-100"
+                         alt="{{ product.title }}"/>
+                </td>
+                <td>{{ product.title }}</td>
+                <td>{{ product.desc }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.discount }}</td>
+                <td>{{ product.stock }}</td>
+                <td>{{ product.specs }}</td>
+                <td>{{ product.updated }}</td>
+                <td>
+                    <a class="btn btn-info" href="{{ url_for('admin.product', product_id=product.id) }}">✏</a>
+                    <a class="btn btn-danger" href="{{ url_for('admin.product', product_id=product.id, delete=1) }}">🗑</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

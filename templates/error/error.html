@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{{ super() }}
+{% block title %}Помилка{% endblock %}
+{% block content %}
+    <img class="d-block rounded mx-auto my-auto" src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + error + '.png') }}" alt="{{ error }}"/>
+{% endblock %}

@@ -4,10 +4,9 @@
             {% set picture = product.pictures[0] %}
         {% endif %}
         <div class="col">
-            <div class="card h-100 {{ 'hover-shadow' if product.in_stock() }}" style="cursor: pointer; {{ 'color: gray;' if not product.in_stock() }}" onclick="location.href='{{ url_for('product', product_id=product.id) }}'">
-                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture if picture else 'placeholder.png') }}"
-                     class="card-img-top"
-                     {{ 'style="filter: grayscale(100%)"'|safe if not product.in_stock() }}
+            <div class="card h-100 {{ 'hover-shadow' if product.in_stock() }}" style="cursor: pointer; {{ 'color: gray;' if not product.in_stock() }}" onclick="location.href='{{ url_for('products.product', product_id=product.id) }}'">
+                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + picture if picture else config['IMAGE_FOLDER'] + 'placeholder.png') }}"
+                     class="card-img-top" {{ 'style="filter: grayscale(100%)"'|safe if not product.in_stock() }}
                      alt="...">
                 <div class="card-body">
                     <h5 class="card-title">{{ product.title }}</h5>
@@ -15,9 +14,9 @@
                 </div>
                 <div class="card-footer">
                     <a {# TODO: повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-success w-100 {{ 'disabled' if not product.in_stock() }}">Додати у корзину</a>
-                    {% if user.is_authenticated and user.has_role('editor') %}
-                        <a {# TODO: повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-warning w-100 mt-1">Редагувати</a>
-                        <a {# TODO: повинно працювати через АЖАКС, без перезавантаження сторінки #} class="btn btn-danger w-100 mt-1">Видалити</a>
+                    {% if current_user.has_role('editor') %}
+                        <a class="btn btn-info w-100" href="{{ url_for('admin.product', product_id=product.id) }}">✏</a>
+                        <a class="btn btn-danger w-100" href="{{ url_for('admin.product', product_id=product.id, delete=1) }}">🗑</a>
                     {% endif %}
                 </div>
             </div>

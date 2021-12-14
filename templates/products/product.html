@@ -8,7 +8,7 @@
                 <div id="carouselPhoto" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else 'placeholder.png') }}" class="d-block w-100" alt="..."/>
+                            <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}" class="d-block w-100" alt="..."/>
                         </div>
                         {% for picture in product.pictures[1:] %}
                             <div class="carousel-item">
@@ -27,7 +27,7 @@
                     <ol class="carousel-indicators list-inline">
                         <li class="list-inline-item active">
                             <a class="active"  data-bs-slide-to="0" aria-current="true" data-bs-target="#carouselPhoto">
-                                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures[0]) }}" class="img-fluid my-img-thumbnail" alt="...">
+                                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}" class="img-fluid my-img-thumbnail" alt="...">
                             </a>
                         </li>
                         {% for picture in product.pictures[1:] %}
@@ -37,49 +37,35 @@
                                 </a>
                             </li>
                         {% endfor %}
-                        <li class="list-inline-item">
-                            <a>
-                                <img src="{{ url_for('static', filename='placeholder.png') }}" class="img-fluid my-img-thumbnail" alt="...">
-                            </a>
-                        </li>
                     </ol>
                 </div>
             </div>
             <div class="col-sm-12 col-xl-7">
                 <div class="card-body">
-                    <h5 class="card-title">
+                    <p class="card-text g-5">
+
+                    </p>
+                    <h5 class="card-title d-inline-block">
                         {{ product.title }}
-                        {% if user.has_role('editor') %}
-                            <button class="btn btn-warning">✏</button>
-                        {% endif %}
-                        <span class="text-muted small float-end">#{{ product.id }}</span>
                     </h5>
-                    <p class="card-text">
-                        {{ product.desc }}
-                        {% if user.has_role('editor') %}
-                            <button class="btn btn-warning">✏</button>
-                        {% endif %}
+                    <span class="text-muted small float-end">#{{ product.id }}</span>
+                    <p class="card-text d-inline-block">
+                        {% for p in product.desc.split('\n') %}
+                            <p>{{ p }}</p>
+                        {% endfor %}
                     </p>
                     <p class="card-text">
                         <small class="text-muted">В наявності: {{ product.stock }}</small>
-                        {% if user.has_role('editor') %}
-                            <button class="btn btn-warning">✏</button>
-                        {% endif %}
+                        <a class="float-end btn btn-danger" href="{{ url_for('admin.product', product_id=product.id, delete=1) }}">🗑</a>
+                        <a class="float-end btn btn-info" href="{{ url_for('admin.product', product_id=product.id) }}">✏</a>
                     </p>
                     <p class="card-text border-top p-2">
-                        {# TODO: Адмін має бачити уцінку у будь-якому випадку #}
                         {% if product.discount != 0 %}
                             <s class="small">
                                 {{ product.price }}
                             </s>
-                            {% if user.has_role('editor') %}
-                                <button class="btn btn-warning">✏</button>
-                            {% endif %}
                             <span class="btn btn-danger text btn-sm">
                                 <span class="small">{{ "%.2f" | format(-(product.discount*100/product.price)) }}%</span>
-                                {% if user.has_role('editor') %}
-                                    <button class="btn btn-warning">✏</button>
-                                {% endif %}
                             </span>
                             {{ ("₴%.2f")|format(product.price - product.discount) }}
                         {% else %}
@@ -89,9 +75,6 @@
                     </p>
                 </div>
             </div>
-            <div class="col-sm-12 col-xl-5">
-                <input type="file" class="form-control" multiple>
-            </div>
             <div class="col-12 border-top">
                 <h5 class="card-title text-center mt-3">Характеристики</h5>
                 <table class="table table-striped mb-0">
@@ -100,12 +83,6 @@
                         <tr>
                             <td>{{ spec }}</td>
                             <td>{{ product.specs[spec] }}</td>
-                            {% if user.has_role('editor') %}
-                                <td>
-                                    <button class="btn btn-danger float-end">❎</button>
-                                    <button class="btn btn-warning float-end">✏</button>
-                                </td>
-                            {% endif %}
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -113,5 +90,4 @@
             </div>
         </div>
     </div>
-    <button class="btn btn-success form-control mb-3">Зберегти</button>
 {% endblock %}

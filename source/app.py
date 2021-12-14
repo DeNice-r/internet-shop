@@ -10,28 +10,35 @@ from flask_mail import Mail
 load_dotenv()
 
 
-app = Flask("K&J website")
-# app.config['SERVER_NAME'] = environ['DOMAIN']
+# Створюємо додаток
+app = Flask('KIShop')
+
+
+# Режим відладки
+app.config['DEBUG'] = eval(environ['DEBUG'])
+app.config['PORT'] = environ['PORT'] * (int(app.config['DEBUG']) + 1)
+
+
+# Задаємо домен, якщо працюємо не у режимі відладки
+app.config['SERVER_NAME'] = ('curse.c:' + app.config['PORT']) if app.config['DEBUG'] else environ['DOMAIN']
 
 
 # Секретний ключ (потрібен, наприклад, щоб отримувати POST-запити)
 app.config['SECRET_KEY'] = environ['SECRET_KEY']
 
-# Секретний ключ для хешування паролів
-app.config['SECURITY_PASSWORD_SALT'] = environ['SECURITY_PASSWORD_SALT']
 
 
 # Папка, у якій працює програма
 app.config['DIR'] = getcwd()
 
 
-# Режим відладки
-app.config['DEBUG'] = eval(environ['DEBUG'])
-app.config['PORT'] = environ['PORT']
-
-
+# Папка, де будуть збережені картинки
+app.config['IMAGE_FOLDER'] = 'image/'
+# Папка, де будуть збережені файли користувачів
+app.config['UPLOAD_FOLDER'] = 'upload/'
+# Папка, де будуть збережені файли товарів
+app.config['PRODUCT_UPLOAD_FOLDER'] = app.config['UPLOAD_FOLDER'] + 'product/'
 # Прийнятні розширення картинок
-app.config['PRODUCT_UPLOAD_FOLDER'] = 'uploads/products'
 app.config['PICTURE_EXTENSIONS'] = ['png', 'jpg', 'jpeg', 'gif']
 
 
@@ -41,6 +48,11 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # Створення підключення до бд
 db = SQLAlchemy(app)
+
+
+# Секретний ключ для хешування паролів
+app.config['SECURITY_PASSWORD_SALT'] = environ['SECURITY_PASSWORD_SALT']
+
 
 # Створення менеджера авторизації
 lm = LoginManager(app)
@@ -72,14 +84,14 @@ csrf = CSRFProtect(app)
 
 
 # Додання контексту у темплейти
-@app.context_processor
-def inject_app():
-    return {'app': app}
+# @app.context_processor
+# def inject_app():
+#     return {'app': app}
 
 
-@app.context_processor
-def inject_user():
-    return {'user': current_user}
+# @app.context_processor
+# def inject_user():
+#     return {'user': current_user}
 
 
 # TODOs:

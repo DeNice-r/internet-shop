@@ -1,7 +1,9 @@
 from app import app, mail
-from flask import request, flash
+from flask import request, flash, abort
 from urllib.parse import urlparse, urljoin
 from flask_mail import Message
+from functools import wraps
+from flask_login import current_user
 
 
 def is_picture(filename: str):
@@ -32,3 +34,5 @@ def send_email(to: str | list, subject: str, template: str):
         sender=app.config['MAIL_DEFAULT_SENDER']
     )
     mail.send(msg)
+
+

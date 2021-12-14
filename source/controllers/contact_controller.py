@@ -1,7 +1,9 @@
-from app import app
-from flask import render_template
+from flask import render_template, Blueprint
 
 
-@app.route("/contact")
-def contact():
-    return render_template("contact/contact.html")
+contact = Blueprint('contact', __name__)
+
+
+@contact.route("/contact")
+def index():
+    return render_template("contact/index.html")

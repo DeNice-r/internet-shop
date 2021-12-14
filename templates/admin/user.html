@@ -1,6 +1,6 @@
-{% extends "layout.html" %}
+{% extends "admin/admin_layout.html" %}
 {{ super() }}
-{% block title %}Профіль{% endblock %}
+{% block title %}Редагування{% endblock %}
 {% block content %}
     {% for field in form %}
         {% if field.errors %}
@@ -12,19 +12,16 @@
         {% endif %}
     {% endfor %}
     <div class="mx-auto col-xxl-4 col-xl-5 col-lg-6 col-md-10 col-sm-12">
-        <h1 class="display-6 d-inline-block">Профіль</h1><span class="text-muted small float-end">#{{ current_user.id }}</span>
+        <h1 class="display-6 d-inline-block">Профіль</h1><span class="text-muted small float-end">#{{ user.id }}</span>
         <form method="post">
             {{ form.hidden_tag() }}
-            <label>Назва профіля</label>
-            <span class="form-control mb-3" readonly>{{ current_user.username }}</span>
-            <label>Електронна пошта</label>
-            <span class="form-control mb-5" readonly>{{ current_user.email }}</span>
+            {{ form.username.label }} {{ form.username(class_="form-control mb-3") }}
+            {{ form.email.label }} {{ form.email(class_="form-control mb-3") }}
             <div class="mb-3">
                 <button class="btn btn-primary w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Змінити пароль
                 </button>
                 <div class="collapse" id="collapseExample">
-                    {{ form.old_password.label }} {{ form.old_password(class_="form-control mb-2") }}
                     {{ form.new_password.label }} {{ form.new_password(class_="form-control mb-2") }}
                     {{ form.confirm_password.label }} {{ form.confirm_password(class_="form-control") }}
                 </div>

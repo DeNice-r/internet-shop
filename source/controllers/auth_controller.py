@@ -1,7 +1,7 @@
 import datetime
 
 from app import app, db
-from flask import render_template, redirect, flash, request, url_for
+from flask import render_template, redirect, flash, request, url_for, Blueprint
 from forms import *
 from flask_login import current_user, login_user, login_required, logout_user
 from models.user import User
@@ -12,6 +12,9 @@ from secrets import token_urlsafe
 from datetime import timedelta
 import sqlalchemy
 import re
+
+
+auth = Blueprint('auth', __name__)
 
 
 def generate_confirmation_token(email):
@@ -28,11 +31,11 @@ def confirm_token(token, expiration=3600):
     return email
 
 
-@app.route("/auth/login", methods=['GET', 'POST'])
+@auth.route("/auth/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         flash('Ви вже увійшли.', 'warning')
-        return redirect('/')
+        return redirect(url_for('main.index'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -66,14 +69,14 @@ def validate_email(text: str):
     return re.fullmatch(email_re, text) is not None
 
 
-@app.route("/auth/register", methods=['GET', 'POST'])
+@auth.route("/auth/register", methods=['GET', 'POST'])
 def register():
     # mess = Message('Hello', ['kdenis0610@gmail.com'], None, '<strong> Just testing the mailer.'
     #                                                       '</strong><br>Have a great day!', 'kishop.mailer@gmail.com')
     # mail.send(mess)
     if current_user.is_authenticated:
         flash('Ви вже зареєстровані.', 'warning')
-        return redirect('/')
+        return redirect(url_for('main.index'))
     form = RegisterForm()
     if form.validate_on_submit():
         if validate_username(form.username.data) and validate_email(form.email.data):
@@ -95,29 +98,39 @@ def register():
             send_email(new_user.email, "Підтвердження пошти",
                        render_template('auth/mails/email_confirmation.html', confirm_url=confirm_url))
             flash('Реєстрація успішна. Будь-ласка активуйте пошту та авторизуйтеся.', 'success')
-            return redirect('/auth/login')
+            return redirect(url_for('.login'))
+    else:
+        if not validate_username(form.username.data):
+            flash("Ім'я профіля може містити тільки A-Z, a-z, 0-9 та _", 'danger')
+        if not validate_email(form.email.data):
+            flash("Недійсна пошта.", 'danger')
     return render_template("auth/register.html", form=form)
 
 
-@app.route('/auth/confirm/<token>')
+@auth.route('/auth/confirm/<token>')
 def confirm(token):
     try:
         email = confirm_token(token)
     except:
         flash('Посилання для підтвердження пошти помилкове або застаріло.', 'danger')
-        return redirect('/')
+        return redirect(url_for('main.index'))
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
         flash('Пошту вже підтверджено. Будь-ласка, авторизуйтесь.', 'warning')
     else:
-        user.confirmed = True
-        db.session.add(user)
-        db.session.commit()
-        flash('Пошту успішно підтверджено.', 'success')
-    return redirect('/auth/login')
+        logout_user()
+        try:
+            user.confirmed = True
+            db.session.add(user)
+            db.session.commit()
+        except:
+            flash('Виникла помилка.', 'danger')
+        else:
+            flash('Пошту успішно підтверджено.', 'success')
+    return redirect(url_for('.login'))
 
 
-@app.route('/auth/resend/<token>')
+@auth.route('/auth/resend/<token>')
 def resend_confirmation(token):
     email = confirm_token(token, 60)
     if isinstance(email, str):
@@ -134,10 +147,10 @@ def resend_confirmation(token):
             flash('Ви вже підтвердили свою пошту.', 'danger')
     else:
         flash('Помилковий код повторної відправки листа.', 'danger')
-    return redirect('auth/login')
+    return redirect(url_for('.login'))
 
 
-@app.route("/auth/profile", methods=['GET', 'POST'])
+@auth.route("/auth/profile", methods=['GET', 'POST'])
 @login_required
 def profile():
     form = ProfileForm()
@@ -153,14 +166,11 @@ def profile():
         db.session.commit()
         flash('Дані успішно оновлено.', 'success')
     else:
-        form.phone.data = current_user.phone
-        form.firstname.data = current_user.firstname
-        form.settlement.data = current_user.settlement
-        form.address.data = current_user.address
+        form.process(obj=current_user)
     return render_template("auth/profile.html", form=form)
 
 
-@app.route('/auth/forgot', methods=['GET', 'POST'])
+@auth.route('/auth/forgot', methods=['GET', 'POST'])
 def forgot_password_send():
     form = ForgotPasswordForm()
     if form.validate_on_submit():
@@ -170,11 +180,11 @@ def forgot_password_send():
             send_email(user.email, 'Відновлення аккаунта на KIShop', render_template('auth/mails/forgot_password.html',
                                                                                      change_url=change_url))
         flash('Лист з посиланням для відновлення надіслано.', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('.login'))
     return render_template('auth/forgot_password_send.html', form=form)
 
 
-@app.route('/auth/forgot/<token>', methods=['GET', 'POST'])
+@auth.route('/auth/forgot/<token>', methods=['GET', 'POST'])
 def forgot_password_change(token):
     form = ChangePasswordForm()
     username = confirm_token(token)
@@ -186,11 +196,11 @@ def forgot_password_change(token):
             flash('Пароль успішно змінено.', 'success')
         return render_template('auth/forgot_password_change.html', form=form)
     flash('Посилання для відновлення профілю помилкове або застаріло.', 'danger')
-    return redirect('/')
+    return redirect(url_for('main.index'))
 
 
-@app.route('/auth/logout')
+@auth.route('/auth/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect('/')
+    return redirect(url_for('main.index'))

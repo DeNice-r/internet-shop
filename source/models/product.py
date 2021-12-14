@@ -1,6 +1,4 @@
 import datetime
-import json
-
 from flask import jsonify
 from app import db
 
@@ -29,6 +27,12 @@ class Product(db.Model):
     def in_stock(self):
         return self.stock > 0
 
+    def in_specs(self, text):
+        for spec in self.specs:
+            if text in spec or text in self.specs[spec]:
+                return True
+        return False
+
     def as_json_response(self):
         return jsonify(self.as_dict())
 
@@ -38,6 +42,3 @@ class Product(db.Model):
     @staticmethod
     def products_as_json_response(products: list):
         return jsonify([*map(Product.as_dict, products)])
-
-
-# TODO: додати відгуки про товар

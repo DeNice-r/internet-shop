@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        <meta charset="UTF-8">
+        {% block style %}
+            <link rel="shortcut icon" href="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'favicon.ico') }}">
+            <link rel="stylesheet" href="{{ url_for('static', filename='/bootstrap/bootstrap.min.css') }}"/>
+            <link rel="stylesheet" href="{{ url_for('static', filename='/style/admin_style.css') }}"/>
+            <link rel="stylesheet" href="{{ url_for('static', filename='mdb5/css/hover_shadow.min.css') }}" />
+        {% endblock %}
+        {% block script %}
+            <script type="text/javascript" src="{{ url_for('static', filename='/bootstrap/bootstrap.bundle.min.js') }}"></script>
+        {% endblock %}
+        <title>{% block title %}{% endblock %} - KISAdmin</title>
+
+    {% endblock %}
+</head>
+<body>
+{% block navbar %}
+    <header class="mb-3">
+        <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom box-shadow">
+            <div class="container-lg">
+                <a class="navbar-brand" href="{{ url_for('admin.index') }}"><img src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'favicon.ico') }}" style="width: 35px; height: 35px;"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{{ url_for('main.index') }}">Сайт</a>
+                        </li>
+                        {# All items below #} <li class="nav-item ms-auto"></li> {# will be right-sided #}
+
+                        {% if current_user.has_role('editor') %}
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('admin.news') }}">Новини</a>
+                            </li>
+                        {% endif %}
+                        {% if current_user.has_role('seller') %}
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('admin.products') }}">Товари</a>
+                            </li>
+                        {% endif %}
+                        {% if current_user.has_role('support') %}
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('admin.support') }}">Підтримка</a>
+                            </li>
+                        {% endif %}
+                        {% if current_user.has_role('admin') %}
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('admin.users') }}">Користувачі</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+<div class="container-fluid">
+    {% for classes, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ classes }} message">{{ message | safe }}</div>
+    {% endfor %}
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>
