@@ -1,5 +1,9 @@
+import json
+import random
+import time
+
 from app import db
-from flask import render_template, redirect, flash, request, url_for, abort, Blueprint
+from flask import render_template, redirect, flash, request, url_for, abort, Blueprint, jsonify
 from admin_forms import *
 from flask_login import current_user
 from models.user import User
@@ -7,7 +11,13 @@ from models.product import Product
 from functools import wraps
 from werkzeug.security import generate_password_hash
 from controllers.auth_controller import generate_confirmation_token
-from utils import send_email
+from utils import send_email, secure_save_image, secure_remove_image, UploadTypes
+from multidict import MultiDict
+from math import ceil
+from sqlalchemy.orm.attributes import flag_modified
+from urllib.parse import unquote
+from sqlalchemy import func
+
 
 admin = Blueprint('admin', __name__)
 
@@ -19,7 +29,9 @@ def role_required(role: str):
             if current_user.has_role(role):
                 return func(*args, **kwargs)
             abort(401)
+
         return wrapper
+
     return decorator
 
 
@@ -30,7 +42,9 @@ def any_role_required(roles):
             if current_user.has_any_role(roles):
                 return func(*args, **kwargs)
             abort(401)
+
         return wrapper
+
     return decorator
 
 
@@ -75,9 +89,69 @@ def products():
 
 
 @admin.route("/admin/product", methods=('GET', 'POST'))
-@role_required('admin')
+@role_required('seller')
 def product():
-    return 'Ok', 200
+    # REM
+    # p = Product.query.all()
+    # for pp in p:
+    #     pp.pictures = json.loads(json.dumps(pp.pictures))
+    # db.session.commit()
+    # OVE
+
+    product_id = request.args.get('product_id')
+    delete = request.args.get('delete')
+    form = ProductForm()
+    if product_id:
+        product_ = Product.query.get(product_id)
+        if delete == '1':
+            try:
+                db.session.delete(product_)
+                db.session.commit()
+            except BaseException as e:
+                flash(f'При видаленні виникла помилка: {e}', 'danger')
+            else:
+                flash('Товар успішно видалено.', 'success')
+            return redirect(url_for('.products'))
+
+        if form.validate_on_submit():
+            try:
+                product_.title = form.title.data
+                product_.desc = form.desc.data
+                product_.price = form.price.data
+                product_.discount = form.discount.data
+                product_.stock = form.stock.data
+                product_.specs = json.loads(form.specs.data)
+
+                modified_pictures = form.pictures.data
+
+                pic_index = 0
+                while pic_index < len(product_.pictures):
+                    if product_.pictures[pic_index] not in modified_pictures:
+                        secure_remove_image(product_.pictures[pic_index], UploadTypes.product_upload)
+                        del product_.pictures[pic_index]
+                    else:
+                        pic_index += 1
+
+                pictures = request.files.getlist('new_pictures')
+                if pictures:
+                    for pic in pictures:
+                        filename = secure_save_image(pic, UploadTypes.product_upload)
+                        if filename is not None:
+                            product_.pictures.append(filename)
+
+                flag_modified(product_, 'pictures')
+                db.session.commit()
+            except BaseException as e:
+                flash(f'При оновленні виникла помилка: {e}', 'danger')
+            else:
+                flash('Дані товару успішно змінено.', 'success')
+            return redirect(url_for('.products'))
+        else:
+            form.process(obj=product_)
+            form.specs.data = json.dumps(product_.specs)
+            form.pictures.data = json.dumps(product_.pictures)
+        return render_template('admin/product.html', form=form, product=product_)
+    abort(404)
 
 
 @admin.route("/admin/news", methods=('GET', 'POST'))
@@ -93,49 +167,74 @@ def support():
     return render_template('admin/support.html')
 
 
-@admin.route("/admin/users", methods=('GET', 'POST'))
+@admin.route("/admin/users", methods=('GET',))
 @role_required('admin')
 def users():
-    get = request.args
+    return render_template('admin/users.html')
+
+
+@admin.route("/api/admin/users", methods=('POST',))
+@role_required('admin')
+def get_users():
+    search = MultiDict(json.loads(unquote(request.headers.get('search'))))
     u = User.query
-    if get.get('id'):
-        u = u.get(get['id'])
-    if get.get('username'):
-        u = u.filter(User.username.contains(get['username']))
-    if get.get('email'):
-        u = u.filter(User.email.contains(get['email']))
-    if get.get('firstname'):
-        u = u.filter(User.firstname.contains(get['firstname']))
-    if get.get('phone'):
-        u = u.filter(User.phone.contains(get['phone']))
-    if get.get('settlement'):
-        u = u.filter(User.settlement.contains(get['settlement']))
-    if get.get('address'):
-        u = u.filter(User.address.contains(get['address']))
-    if get.get('confirmed'):
-        u = u.filter(User.confirmed == (get['confirmed'] == '+'))
-    if get.get('roles'):
+    if search.get('id'):
+        u = u.get(search['id'])
+    if search.get('username'):
+        u = u.filter(func.lower(User.username).contains(func.lower(search['username'])))
+    if search.get('email'):
+        u = u.filter(func.lower(User.email).contains(func.lower(search['email'])))
+    if search.get('firstname'):
+        u = u.filter(func.lower(User.firstname).contains(func.lower(search['firstname'])))
+    if search.get('phone'):
+        u = u.filter(func.lower(User.phone).contains(func.lower(search['phone'])))
+    if search.get('settlement'):
+        u = u.filter(func.lower(User.settlement).contains(func.lower(search['settlement'])))
+    if search.get('address'):
+        u = u.filter(func.lower(User.address).contains(func.lower(search['address'])))
+    if search.get('confirmed'):
+        u = u.filter(User.confirmed == (search['confirmed'] == '+'))
+    if search.get('roles'):
         r = []
         for user_ in u:
-            if get['roles'] in str(user_.roles):
+            if search['roles'] in str(user_.roles):
                 r.append(user_)
         u = r
-    if get.get('registered_on'):
+    if search.get('registered_on'):
         r = []
         for user_ in u:
-            if get['registered_on'] in str(user_.registered_on):
+            if search['registered_on'] in str(user_.registered_on):
                 r.append(user_)
         u = r
-    if get.get('last_login'):
+    if search.get('last_login'):
         r = []
         for user_ in u:
-            if get['last_login'] in str(user_.last_login):
+            if search['last_login'] in str(user_.last_login):
                 r.append(user_)
         u = r
 
     if u == User.query:
         u = u.all()
-    return render_template('admin/users.html', users=u)
+
+    items_per_page = int(search['items_per_page']) if search.get('items_per_page') else 20
+    page = request.headers.get('page')
+    page = int(page) - 1 if page else 0
+
+    try:
+        is_iterable_test = iter(u)
+    except TypeError:
+        u = [u]
+    try:
+        number_of_pages = ceil(len(u) / items_per_page)
+    except TypeError:
+        number_of_pages = ceil(u.count() / items_per_page)
+    u = u[items_per_page * page:items_per_page * (page + 1)]
+
+    return jsonify({'content': render_template("admin/users_response.html",
+                                               users=u),
+                    'pagination': render_template('shared/pagination.html',
+                                                  number_of_pages=number_of_pages,
+                                                  page=page + 1)})
 
 
 @admin.route("/admin/user", methods=('GET', 'POST'))
@@ -155,7 +254,7 @@ def user():
                     db.session.delete(user_)
                     db.session.commit()
                 except BaseException as e:
-                    flash(f'При оновленні виникла помилка: {e}', 'danger')
+                    flash(f'При видаленні виникла помилка: {e}', 'danger')
                 else:
                     flash('Користувача успішно видалено.', 'success')
             return redirect(url_for('.users'))
@@ -187,3 +286,4 @@ def user():
         else:
             form.process(obj=user_)
         return render_template('admin/user.html', user=user_, form=form)
+    abort(404)

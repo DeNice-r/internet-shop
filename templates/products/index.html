@@ -1,78 +1,64 @@
-{% extends "layout.html" %}
+{% extends "shared/layout.html" %}
 {{ super() }}
+{% block style %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='mdb5/css/hover_shadow.min.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/animate.css') }}" />
+{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='script/ajax.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='script/basket.js') }}" defer></script>
+{% endblock %}
 {% block title %}Товари{% endblock %}
 {% block content %}
-    <script>
-        const csrf_token = "{{ csrf_token() }}";
-        {# Змінити задані query-параметри (для відтворення сторінки при передачі посилання іншому користувачу) #}
-        function setUrlParam(param, value) {
-            let searchParams = new URLSearchParams(window.location.search);
-            searchParams.set(param, value);
-            window.history.pushState({"page": 1+getUrlParam('page')},"", location.pathname + "?" + searchParams.toString());
-            {# TODO: on history state change load page again #}
-            {# TODO: on history state change load page again #}
-        }
-
-        function getUrlParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
-
-        function load_page(page=-1){
-            window.scrollTo({top: 0, behavior: 'smooth'});
-            let request = new XMLHttpRequest(),
-                container = document.querySelector('#products');
-
-            if (page === -1){
-                page = getUrlParam('page');
-                if (!page){
-                    page = 1;
-                    setUrlParam('page', page);
-                }
-            }
-            else {
-                setUrlParam('page', page)
-            }
-
-            request.open('post', '/api/get_products');
-            request.setRequestHeader('Content-Type', 'text/html');
-            request.setRequestHeader('X-CSRFToken', csrf_token);
-            request.setRequestHeader('page', page.toString());
-            request.onload = (e) => {
-                container.innerHTML = request.response;
-                page = +container.querySelector('#current_page').innerHTML;
-                setUrlParam('page', page);
-            }
-            container.innerHTML = '<div class="d-flex justify-content-center">\
-                                       <div class="spinner-border text-primary">\
-                                       </div>\
-                                   </div>';
-            request.send();
-        }
-    </script>
-    <div class="card mb-4">
+    <div class="card mb-3">
         <h5 class="card-header">Пошук</h5>
         <div class="card-body">
-            <form class="row row-cols-auto g-3 align-items-center col-12" method="get">
-                <div class="col-12">
+            <form class="row row-cols-auto g-1 align-items-center col-12" method="get" id="search_form">
+                <div class="col-3">
+                    <input type="text" name="q" class="form-control" placeholder="Я шукаю..." title="Частина назви товару, його повна назва, частина опису або ID">
+                </div>
+                <div class="col-2">
+                    <select name="order_by" class="form-control" title="За яким параметром сортувати товари">
+                        <option value="1" selected>За новизною</option>
+                        <option value="2">За алфавітом</option>
+                        <option value="3">За ціною</option>
+                        <option value="4">За знижкою</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <select name="order" class="form-control" title="У якому порядку сортуються товари">
+                        <option value="0" selected>За спаданням</option>
+                        <option value="1">За зростанням</option>
+                    </select>
+                </div>
+                <div class="col-3">
                     <div class="input-group">
-                        <input type="text" name="q" class="form-control" id="inlineFormInputGroupUsername" placeholder="Частина назви товару, його повна назва, частина опису або ID">
-                        {# AJAX запит на сервер (модифікувати load_page щоб він отримував усі параметри, задані у пошуку) #}
-                        <input type="submit" class="btn btn-primary" value="Шукати">
+                        <input type="text" name="price_from" class="form-control" placeholder="Ціна від" title="Найнижча ціна шуканого товару">
+                        <input type="text" name="price_to" class="form-control" placeholder="До" title="Найвища ціна шуканого товару">
                     </div>
                 </div>
+                <div class="col-1">
+                    <select name="items_per_page" class="form-control" title="Кількість товарів на сторінці">
+                        <option value="8">8</option>
+                        <option value="16" selected>16</option>
+                        <option value="24">24</option>
+                        <option value="40">40</option>
+                    </select>
+                </div>
+                <div class="col-1">
+                    <input type="submit" class="btn btn-primary" value="Шукати">
+                </div>
             </form>
-            <h5 class="card-title">Параметри пошуку</h5>
-            <p>Кількість товарів на сторінці, аск-деск порядок, по новизні, по алфавіту, по ціні, по уцінці, по % уцінки</p>
-            <p>ціна від - до</p>
-            <a href="#" class="btn btn-primary">Удалить цю кнопку</a>
         </div>
     </div>
-    <div id="products">
+    <div id="ajax-spinner">
+        <div class="d-flex justify-content-center" hidden>
+            <div class="spinner-border text-primary">
+            </div>
+        </div>
     </div>
-
-
-    <script>
-        load_page()
-    </script>
+    <div id="ajax-content" class="animate__animated"></div>
+    <div id="ajax-pagination"></div>
 {% endblock %}

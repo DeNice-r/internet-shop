@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, current_user
 from flask_wtf.csrf import CSRFProtect
 from flask_mail import Mail
+from flask_migrate import Migrate
 
 # Завантажуємо змінні середовища
 load_dotenv()
@@ -27,11 +28,12 @@ app.config['SERVER_NAME'] = ('curse.c:' + app.config['PORT']) if app.config['DEB
 app.config['SECRET_KEY'] = environ['SECRET_KEY']
 
 
-
 # Папка, у якій працює програма
 app.config['DIR'] = getcwd()
 
 
+# Папка, де будуть знаходитися доступні користувачу файли
+app.config['STATIC_FOLDER'] = '/static/'
 # Папка, де будуть збережені картинки
 app.config['IMAGE_FOLDER'] = 'image/'
 # Папка, де будуть збережені файли користувачів
@@ -39,7 +41,7 @@ app.config['UPLOAD_FOLDER'] = 'upload/'
 # Папка, де будуть збережені файли товарів
 app.config['PRODUCT_UPLOAD_FOLDER'] = app.config['UPLOAD_FOLDER'] + 'product/'
 # Прийнятні розширення картинок
-app.config['PICTURE_EXTENSIONS'] = ['png', 'jpg', 'jpeg', 'gif']
+app.config['PICTURE_EXTENSIONS'] = ['apng', 'avif', 'gif', 'jpg', 'jpeg', 'jfif', 'pjpeg', 'pjp', 'png', 'svg', 'webp']
 
 
 # Конфігурація підключення до бд
@@ -48,7 +50,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 # Створення підключення до бд
 db = SQLAlchemy(app)
-
+# Створення менеджера міграцій бд
+migrate = Migrate(app, db)
 
 # Секретний ключ для хешування паролів
 app.config['SECURITY_PASSWORD_SALT'] = environ['SECURITY_PASSWORD_SALT']
@@ -95,4 +98,4 @@ csrf = CSRFProtect(app)
 
 
 # TODOs:
-# TODO: flash-повідомлення з часом стають прозорими та пропадають
+

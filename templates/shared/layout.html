@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+        {% block meta %}
+            {% include 'shared/meta.html' %}
+        {% endblock %}
+        {% block style %}
+            {% include 'shared/style.html' %}
+        {% endblock %}
+        {% block script %}
+            {% include 'shared/script.html' %}
+        {% endblock %}
+        <title>{% block title %}{% endblock %} - IShop</title>
+    {% endblock %}
+</head>
+<body>
+{% block navbar %}
+    <header class="mb-3 fixed-top position-sticky">
+        <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom box-shadow">
+            <div class="container-lg">
+                <a class="navbar-brand" href="{{ url_for('main.index') }}"><img src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'favicon.ico') }}" style="width: 35px; height: 35px;" alt="..."></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{{ url_for('main.index') }}">Головна</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{{ url_for('products.index') }}">Товари</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{{ url_for('news.index') }}">Новини</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{{ url_for('contact.index') }}">Зв'язатися з нами</a>
+                        </li>
+                        {# All items below #} <li class="nav-item ms-auto"></li> {# will be right-sided #}
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="{{ url_for('basket.index') }}">Корзина</a>
+                        </li>
+                        {% if current_user.is_authenticated %}
+                            {% if current_user.has_any_role('admin', 'editor', 'support', 'seller') %}
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="{{ url_for('admin.index') }}">Адміністрування</a>
+                                </li>
+                            {% endif %}
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('auth.profile') }}">Профіль</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('auth.logout') }}">Вийти</a>
+                            </li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('auth.login') }}">Вхід</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('auth.register') }}">Реєстрація</a>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+<div class="container-lg">
+    {% for classes, message in get_flashed_messages(with_categories=True) %}
+        <div class="alert alert-{{ classes }} message">{{ message | safe }}</div>
+    {% endfor %}
+    {% block content %}
+    {% endblock %}
+</div>
+</body>
+</html>

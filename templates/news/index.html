@@ -1,6 +1,17 @@
-{% extends "layout.html" %}
+{% extends "shared/layout.html" %}
 {{ super() }}
-{% block title %}Pagename{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='script/ajax.js') }}" defer></script>
+{% endblock %}
+{% block title %}Новини{% endblock %}
 {% block content %}
-<div class="display-1">News</div>
+    <div id="ajax-spinner">
+        <div class="d-flex justify-content-center" hidden>
+            <div class="spinner-border text-primary">
+            </div>
+        </div>
+    </div>
+<div id="ajax-content" class="animate__animated"></div>
+<div id="ajax-pagination"></div>
 {% endblock %}

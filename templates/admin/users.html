@@ -1,65 +1,65 @@
 {% extends "admin/admin_layout.html" %}
 {{ super() }}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='script/ajax.js') }}" defer></script>
+{% endblock %}
 {% block title %}Користувачі{% endblock %}
 {% block content %}
-    {# TODO: AJAX loading, pagination and search #}
-    <h1 class="text-center">Користувачі</h1>
-    <table class="table table-sm table-responsive table-bordered table-striped table-light table-hover mb-0">
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Ім'я профіля</th>
-            <th>Пошта</th>
-            <th>Ім'я</th>
-            <th>Телефон</th>
-            <th>Населений пункт</th>
-            <th>Адреса</th>
-            <th>Ролі</th>
-            <th>Дата реєстрації</th>
-            <th>Останній вхід</th>
-            <th>Пошту підтверджено</th>
-        </tr>
-        <tr>
-            <form>
-                <th><input name="id" type="text"></th>
-                <th><input name="username" type="text"></th>
-                <th><input name="email" type="text"></th>
-                <th><input name="firstname" type="text"></th>
-                <th><input name="phone" type="text"></th>
-                <th><input name="settlement" type="text"></th>
-                <th><input name="address" type="text"></th>
-                <th><input name="roles" type="text"></th>
-                <th><input name="registered_on" type="text"></th>
-                <th><input name="last_login" type="text"></th>
-                <th><input name="confirmed" type="text"></th>
-                <input type="submit" hidden>
-            </form>
-        </tr>
-        </thead>
-        <tbody>
-        {% if users is not iterable %}
-            {% set users = [users] %}
-        {% endif %}
-        {% for user in users %}
-            <tr>
-                <td>{{ user.id }}</td>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.firstname }}</td>
-                <td>{{ user.phone }}</td>
-                <td>{{ user.settlement }}</td>
-                <td>{{ user.address }}</td>
-                <td>{{ ', '.join(user.roles) }}</td>
-                <td>{{ user.registered_on }}</td>
-                <td>{{ user.last_login }}</td>
-                <td>{{ '➕' if user.confirmed else '➖' }}</td>
-                <td>
-                    <a class="btn btn-info" href="{{ url_for('admin.user', user_id=user.id) }}">✏</a>
-                    <a class="btn btn-danger" href="{{ url_for('admin.user', user_id=user.id, delete='1') }}">🗑</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<h1 class="text-center">Користувачі</h1>
+
+<table class="table table-sm table-responsive table-bordered table-striped table-light table-hover mb-3">
+<thead>
+<tr>
+    <th>#</th>
+    <th>ID</th>
+    <th>Ім'я профіля</th>
+    <th>Пошта</th>
+    <th>Ім'я</th>
+    <th>Телефон</th>
+    <th>Населений пункт</th>
+    <th>Адреса</th>
+    <th>Ролі</th>
+    <th>Дата реєстрації</th>
+    <th>Останній вхід</th>
+    <th>Пошту підтверджено</th>
+    <th>Записів на сторінці</th>
+</tr>
+<tr>
+    <form id="search_form">
+        <th></th>
+        <th><input name="id" type="text"></th>
+        <th><input name="username" type="text"></th>
+        <th><input name="email" type="text"></th>
+        <th><input name="firstname" type="text"></th>
+        <th><input name="phone" type="text"></th>
+        <th><input name="settlement" type="text"></th>
+        <th><input name="address" type="text"></th>
+        <th><input name="roles" type="text"></th>
+        <th><input name="registered_on" type="text"></th>
+        <th><input name="last_login" type="text"></th>
+        <th><input name="confirmed" type="text"></th>
+        <th>
+            <select name="items_per_page" id="items_per_page_selector" class="form-control">
+                <option value="20" selected>20</option>
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="200">200</option>
+            </select>
+        </th>
+        <input type="submit" hidden>
+    </form>
+</tr>
+</thead>
+<tbody id="ajax-content">
+</tbody>
+</table>
+<div id="ajax-pagination"></div>
+<div id="ajax-spinner" hidden>
+    <div class="d-flex justify-content-center">
+        <div class="spinner-border text-primary">
+        </div>
+    </div>
+</div>
 
 {% endblock %}

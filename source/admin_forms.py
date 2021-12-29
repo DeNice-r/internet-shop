@@ -1,11 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TelField, EmailField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import InputRequired, DataRequired, Optional, Length, EqualTo
+from wtforms import StringField, TelField, EmailField, PasswordField, SubmitField, IntegerField, TextAreaField,\
+    MultipleFileField, FloatField, HiddenField
+from wtforms.validators import DataRequired, Optional, Length, EqualTo
 
 
 class UserForm(FlaskForm):
-    username = StringField('Назва профіля', validators=[DataRequired("Назва профіля - обов'язкове поле!"),
-                                                        Length(4, 50, "Назва профіля недопустимої довжини! (допустима "
+    username = StringField('Назва профіля', validators=[DataRequired("Назва профілю - обов'язкове поле!"),
+                                                        Length(4, 50, "Назва профілю недопустимої довжини! (допустима "
                                                                       "довжина від 4 до 50 символів).")])
     email = EmailField('Електронна пошта', validators=[DataRequired("Електронна пошта - обов'язкове поле!"),
                                                        Length(5, 320, "Пошта недопустимої довжини! (допустима "
@@ -29,4 +30,18 @@ class UserForm(FlaskForm):
                                                          Length(0, 200, "Адреса недопустимої довжини! (допустима "
                                                                         "довжина до 200 символів). Для зміни даних "
                                                                         "зв'яжіться з підтримкою.")])
+    submit = SubmitField('Зберегти')
+
+
+class ProductForm(FlaskForm):
+    title = StringField('Назва товару', validators=[DataRequired("Назва товару - обов'язкове поле!"),
+                                                    Length(1, 256, "Назва товару недопустимої довжини! (допустима "
+                                                                   "довжина від 1 до 256 символів).")])
+    desc = TextAreaField('Опис')
+    pictures = HiddenField()
+    new_pictures = MultipleFileField('Картинки')
+    price = FloatField('Ціна', validators=[DataRequired("Ціна товару - обов'язкове поле")])
+    discount = FloatField('Знижка')
+    stock = IntegerField('В наявності')
+    specs = HiddenField()
     submit = SubmitField('Зберегти')

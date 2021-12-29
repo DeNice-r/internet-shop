@@ -71,9 +71,6 @@ def validate_email(text: str):
 
 @auth.route("/auth/register", methods=['GET', 'POST'])
 def register():
-    # mess = Message('Hello', ['kdenis0610@gmail.com'], None, '<strong> Just testing the mailer.'
-    #                                                       '</strong><br>Have a great day!', 'kishop.mailer@gmail.com')
-    # mail.send(mess)
     if current_user.is_authenticated:
         flash('Ви вже зареєстровані.', 'warning')
         return redirect(url_for('main.index'))
@@ -92,18 +89,18 @@ def register():
                     flash("Користувач з такою поштою вже існує.", 'danger')
                 else:
                     raise
-                return render_template("auth/register.html")
+                return render_template("auth/register.html", form=form)
             token = generate_confirmation_token(new_user.email)
-            confirm_url = url_for('confirm', token=token, _external=True)
+            confirm_url = url_for('.confirm', token=token, _external=True)
             send_email(new_user.email, "Підтвердження пошти",
                        render_template('auth/mails/email_confirmation.html', confirm_url=confirm_url))
             flash('Реєстрація успішна. Будь-ласка активуйте пошту та авторизуйтеся.', 'success')
             return redirect(url_for('.login'))
-    else:
-        if not validate_username(form.username.data):
-            flash("Ім'я профіля може містити тільки A-Z, a-z, 0-9 та _", 'danger')
-        if not validate_email(form.email.data):
-            flash("Недійсна пошта.", 'danger')
+        else:
+            if not validate_username(form.username.data):
+                flash("Ім'я профіля може містити тільки A-Z, a-z, 0-9 та _", 'danger')
+            if not validate_email(form.email.data):
+                flash("Недійсна пошта.", 'danger')
     return render_template("auth/register.html", form=form)
 
 
@@ -138,7 +135,7 @@ def resend_confirmation(token):
         user = User.query.filter_by(email=email).first_or_404()
         if not user.confirmed:
             token = generate_confirmation_token(email)
-            confirm_url = url_for('confirm', token=token, _external=True)
+            confirm_url = url_for('.confirm', token=token, _external=True)
             html = render_template('auth/mails/email_confirmation.html', confirm_url=confirm_url)
             subject = "Підтвердження пошти"
             send_email(user.email, subject, html)
@@ -176,7 +173,7 @@ def forgot_password_send():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            change_url = url_for('forgot_password_change', token=generate_confirmation_token(user.username), _external=True)
+            change_url = url_for('.forgot_password_change', token=generate_confirmation_token(user.username), _external=True)
             send_email(user.email, 'Відновлення аккаунта на KIShop', render_template('auth/mails/forgot_password.html',
                                                                                      change_url=change_url))
         flash('Лист з посиланням для відновлення надіслано.', 'success')
@@ -194,6 +191,7 @@ def forgot_password_change(token):
             user.password = generate_password_hash(form.new_password.data)
             db.session.commit()
             flash('Пароль успішно змінено.', 'success')
+            return redirect(url_for('.login'))
         return render_template('auth/forgot_password_change.html', form=form)
     flash('Посилання для відновлення профілю помилкове або застаріло.', 'danger')
     return redirect(url_for('main.index'))

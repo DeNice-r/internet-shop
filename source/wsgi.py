@@ -32,8 +32,9 @@ debug = app.config['DEBUG']
 # Задаємо порт. У режимі відладки порт подвоюється (наприклад для 80 стає 8080)
 db.create_all()
 
-app.run(
-    debug=debug,
-    host='0.0.0.0',
-    port=app.config["PORT"],
-)
+if __name__ == '__main__':
+    app.run(
+        debug=debug,
+        host='0.0.0.0',
+        port=app.config["PORT"],
+    )

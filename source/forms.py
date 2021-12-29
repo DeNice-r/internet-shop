@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, TelField, EmailField, PasswordField, SubmitField, BooleanField
+from wtforms import StringField, TelField, EmailField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import InputRequired, DataRequired, Optional, Length, EqualTo  # , Email
 
 
@@ -85,6 +85,26 @@ class ChangePasswordForm(FlaskForm):
                                                              EqualTo('confirm_password', 'Паролі повинні співпадати!')])
     confirm_password = PasswordField('Підтвердження пароля', validators=[InputRequired(), Length(8, 64)])
     submit = SubmitField('Надіслати лист')
+
+
+class OrderForm(FlaskForm):
+    firstname = StringField("Ім'я", validators=[DataRequired(),
+                                                Length(1, 50, "Ім'я недопустимої довжини! (допустима "
+                                                              "довжина до 50 символів).")])
+    phone = TelField('Мобільний телефон', validators=[DataRequired(),
+                                                      Length(9, 13, "Телефон недопустимої довжини! (допустима довжина "
+                                                                    "від 9 до 13 символів).")])
+    settlement = StringField('Населений пункт', validators=[DataRequired(),
+                                                            Length(1, 50, "Назва населеного пункту недопустимої "
+                                                                          "довжини! (допустима довжина від до 50 "
+                                                                          "символів).")])
+    address = StringField('Адреса доставки', validators=[DataRequired(),
+                                                         Length(1, 200, "Адреса недопустимої довжини! (допустима "
+                                                                        "довжина до 200 символів).")])
+    comment = TextAreaField('Коментар', validators=[Optional(),
+                                                    Length(0, 500, "Коментар недопустимої довжини! "
+                                                                   "(допустима довжина до 500 символів).")])
+    submit = SubmitField('Зберегти')
 
 
 # TODO: наслідування форм (наприклад, пароль-повтор пароля або додаткові поля у реєстрації та профілі)

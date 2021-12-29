@@ -1,0 +1,20 @@
+{% for user in users %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.firstname }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.settlement }}</td>
+        <td>{{ user.address }}</td>
+        <td>{{ ', '.join(user.roles) }}</td>
+        <td>{{ user.registered_on }}</td>
+        <td>{{ user.last_login }}</td>
+        <td>{{ '➕' if user.confirmed else '➖' }}</td>
+        <td>
+            <a class="btn btn-info" href="{{ url_for('admin.user', user_id=user.id) }}">✏</a>
+            <a class="btn btn-danger" href="{{ url_for('admin.user', user_id=user.id, delete='1') }}">🗑</a>
+        </td>
+    </tr>
+{% endfor %}

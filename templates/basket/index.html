@@ -1,6 +1,80 @@
-{% extends "layout.html" %}
+{% extends "shared/layout.html" %}
 {{ super() }}
-{% block title %}Pagename{% endblock %}
+{% block title %}Корзина{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='script/basket.js') }}" defer></script>
+{% endblock %}
 {% block content %}
-*Basket*
+    {% if basket %}
+        {% set sum = namespace(value=0) %}
+        <div id="basket-nonempty" class="mx-auto w-75">
+            <div class="mx-auto"><h5 class="d-inline-block">Ваше замовлення</h5><button class="btn" onclick="clearBasket()">🗑</button></div>
+            <table class="table table-sm table-responsive mb-3">
+                <tbody  id="basketItems">
+                {% for product in products %}
+                    <tr class="align-middle" product-id="{{ product.id }}" product-price="{{ product.price - product.discount }}">
+                        <td class="col-1">
+                            <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}"
+                                 class="d-block w-100"
+                                 alt="{{ product.title }}"/>
+                        </td>
+                        <td class="col-8 m-0">
+                            <span class="col-12 d-inline-block">
+                                <a class="d-inline-block card-title link m-0" href="{{ url_for('products.product', product_id=product.id) }}">
+                                    <h5 class="m-0 card-title">{{ product.title }}</h5>
+                                </a>
+                            </span>
+                            <span class="very-small text-muted">#{{ product.id }}</span>
+                        </td>
+                        <td class="col-3">
+        {#                    <button class="btn p-0" onclick="removeOneFromBasket({{ product.id }})">➖</button>#}
+                            <div class="d-inline-block">
+                                <input type="number"
+                                       onchange="setBasketItem(this, {{ product.id }})"
+                                       oninput="setBasketItem(this, {{ product.id }})"
+                                       class="row-cols-1 form-control"
+                                       value="{{ basket[product.id | string] }}"
+                                       min="0"
+                                       max="{{ product.stock }}"
+                                       title="Кількість одиниць цього товару">
+                            </div>
+        {#                    <button class="btn p-0" onclick="addToBasket({{ product.id }})">➕</button>#}
+                        </td>
+                        <td class="col-1">
+                            {% set localsum = basket[product.id | string] * (product.price - product.discount) %}
+                            <span class="text-success local-sum">{{ ("₴%.2f")|format(localsum) }}</span>
+                            {% set sum.value = sum.value + localsum %}
+                        </td>
+                        <td class="col-1">
+                            <button onclick="removeFromBasket({{ product.id }})" class="btn">🗑</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            <span class="float-end text-success fw-bold" id="overall-sum">{{ ("₴%.2f")|format(sum.value) }}</span>
+            <div class="mb-3">
+                <button class="btn btn-secondary w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#specCollapse" aria-expanded="false" aria-controls="specCollapse">
+                    Завершити замовлення
+                </button>
+                <div id="specCollapse" class="collapse">
+                    <form method="post" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        {{ form.phone.label }} {{ form.phone(class_="form-control mb-3") }}
+                        {{ form.firstname.label }} {{ form.firstname(class_="form-control mb-3") }}
+                        {{ form.settlement.label }} {{ form.settlement(class_="form-control mb-3") }}
+                        {{ form.address.label }} {{ form.address(class_="form-control mb-3") }}
+                        {{ form.comment.label }} {{ form.comment(class_="form-control mb-2") }}
+                        {{ form.submit(class_="w-100 px-auto btn btn-primary") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    <div id="basket-empty" {{ 'hidden' if basket }}>
+        <h5 class="text-center">Ви ще нічого не додали до корзини</h5>
+        <img id="basket-empty" class="d-block rounded mx-auto my-auto" src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'empty-basket.png') }}" alt="В корзині нічого немає"/>
+    </div>
+
 {% endblock %}

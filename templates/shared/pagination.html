@@ -1,0 +1,35 @@
+<ul class="pagination justify-content-center">
+    {% if number_of_pages > 1 %}
+        <li class="page-item {{ 'disabled' if page == 1  }}"><button class="page-link" onclick="loadPage( {{ page-1 }} )">Назад</button></li>
+        {% if page > 1 %}
+            <li class="page-item"><button class="page-link" onclick="loadPage({{ 1 }})">1</button></li>
+        {% endif %}
+        {% if page > 6 %}
+            <li class="page-item disabled"><button class="page-link">...</button></li>
+        {% elif page == 6 %}
+            <li class="page-item"><button class="page-link" onclick="loadPage({{ 2 }})">{{ 2 }}</button></li>
+        {% endif %}
+        {% for p in range(page - 3, page) if p > 1 %}
+            <li class="page-item"><button class="page-link" onclick="loadPage({{ p }})">{{ p }}</button></li>
+        {% endfor %}
+        <li class="page-item active"><a class="btn page-link" id="current_page" href="#">{{ page }}</a></li>
+        {% for p in range(page + 1, page + 4) if p < number_of_pages %}
+            <li class="page-item"><button class="page-link" onclick="loadPage({{ p }})">{{ p }}</button></li>
+        {% endfor %}
+        {% if page < number_of_pages - 5 %}
+            <li class="page-item disabled"><button class="page-link">...</button></li>
+        {% elif page == number_of_pages - 5 %}
+            <li class="page-item"><button class="page-link" onclick="loadPage({{ number_of_pages - 1 }})">{{ number_of_pages - 1 }}</button></li>
+        {% endif %}
+        {% if page < number_of_pages %}
+            <li class="page-item"><button class="page-link" onclick="loadPage({{ number_of_pages }})">{{ number_of_pages }}</button></li>
+        {% endif %}
+        <li class="page-item {{ 'disabled' if page == number_of_pages }}">
+            <button class="page-link" onclick="loadPage({{ page }} + 1)">Вперед</button>
+        </li>
+    {% elif number_of_pages == 0 %}
+        <h1>
+            ¯\_(ツ)_/¯
+        </h1>
+    {% endif %}
+</ul>

@@ -7,11 +7,11 @@ from app import db
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(256), nullable=False)
-    pictures = db.Column(db.JSON, default='[]', nullable=False)
+    pictures = db.Column(db.JSON, default=[], nullable=False)
     price = db.Column(db.Float, nullable=False, default=0)
     discount = db.Column(db.Float, nullable=False, default=0)
     stock = db.Column(db.Integer, default=1, nullable=False)
-    specs = db.Column(db.JSON, default='{}', nullable=False)
+    specs = db.Column(db.JSON, default={}, nullable=False)
     desc = db.Column(db.Text, nullable=True)
     updated = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
@@ -27,7 +27,13 @@ class Product(db.Model):
     def in_stock(self):
         return self.stock > 0
 
-    def in_specs(self, text):
+    def bought(self, number: int):
+        if number > self.stock or number <= 0:
+            raise ValueError
+        self.stock -= number
+        return number * (self.price - self.discount)
+
+    def in_specs(self, text: str):
         for spec in self.specs:
             if text in spec or text in self.specs[spec]:
                 return True

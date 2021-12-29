@@ -1,0 +1,17 @@
+{% extends "shared/layout.html" %}
+{{ super() }}
+{% block title %}Корзина{% endblock %}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='script/basket.js') }}" defer></script>
+{% endblock %}
+{% block content %}
+    <div class="">
+        <small>Унікальне посилання: <a href="{{ url_for('.order', order_token=order_token, _external=True) }}">{{ url_for('.order', order_token=order_token, _external=True) }}</a></small>
+        <div>
+            <h5 class="d-inline-block">Ваше замовлення</h5><span class="text-muted small float-end">#{{ order.id }}</span>
+            <div>Сума: <span class="text-success">₴{{ order.final_price }}</span></div>
+            <div>Статус: <span style="color: {{ order.get_status_color() }};">{{ order.get_status_string() }}</span></div>
+        </div>
+    </div>
+{% endblock %}

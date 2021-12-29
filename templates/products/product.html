@@ -1,5 +1,10 @@
-{% extends "layout.html" %}
+{% extends "shared/layout.html" %}
 {{ super() }}
+{% block script %}
+    {{ super() }}
+    <script type="text/javascript" src="{{ url_for('static', filename='script/basket.js') }}" defer></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='script/user_product.js') }}" defer></script>
+{% endblock %}
 {% block title %}{{ product.title }}{% endblock %}
 {% block content %}
     <div class="card mb-3">
@@ -8,11 +13,11 @@
                 <div id="carouselPhoto" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}" class="d-block w-100" alt="..."/>
+                            <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}" class="d-block w-100" alt="..."/>
                         </div>
                         {% for picture in product.pictures[1:] %}
                             <div class="carousel-item">
-                                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" class="d-block w-100  thumb-post" alt="..."/>
+                                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + picture) }}" class="d-block w-100 thumb-post" alt="..."/>
                             </div>
                         {% endfor %}
                     </div>
@@ -24,16 +29,16 @@
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
                         <span class="visually-hidden">Назад</span>
                     </button>
-                    <ol class="carousel-indicators list-inline">
-                        <li class="list-inline-item active">
-                            <a class="active"  data-bs-slide-to="0" aria-current="true" data-bs-target="#carouselPhoto">
-                                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}" class="img-fluid my-img-thumbnail" alt="...">
+                    <ol class="carousel-indicators list-inline mx-auto" id="productPhotoIndicators">
+                        <li class="list-inline-item m-0">
+                            <a class="active" data-bs-slide-to="0" aria-current="true" data-bs-target="#carouselPhoto">
+                                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}" class="img-fluid my-img-thumbnail" alt="...">
                             </a>
                         </li>
                         {% for picture in product.pictures[1:] %}
-                            <li class="list-inline-item">
+                            <li class="list-inline-item m-0">
                                 <a data-bs-slide-to="{{ loop.index }}" data-bs-target="#carouselPhoto">
-                                    <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + picture) }}" class="img-fluid my-img-thumbnail" alt="...">
+                                    <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + picture) }}" class="img-fluid my-img-thumbnail" alt="...">
                                 </a>
                             </li>
                         {% endfor %}
@@ -55,9 +60,16 @@
                         {% endfor %}
                     </p>
                     <p class="card-text">
-                        <small class="text-muted">В наявності: {{ product.stock }}</small>
-                        <a class="float-end btn btn-danger" href="{{ url_for('admin.product', product_id=product.id, delete=1) }}">🗑</a>
-                        <a class="float-end btn btn-info" href="{{ url_for('admin.product', product_id=product.id) }}">✏</a>
+                        {% if product.stock %}
+                            <small class="text-muted">В наявності: {{ product.stock }}</small>
+                        {% else %}
+                            <span class="text-danger fw-bold">Немає в наявності</span>
+                        {% endif %}
+
+                        {% if current_user.has_role('seller') %}
+                            <a class="float-end btn btn-danger" href="{{ url_for('admin.product', product_id=product.id, delete=1) }}">🗑</a>
+                            <a class="float-end btn btn-info" href="{{ url_for('admin.product', product_id=product.id) }}">✏</a>
+                        {% endif %}
                     </p>
                     <p class="card-text border-top p-2">
                         {% if product.discount != 0 %}
@@ -71,7 +83,7 @@
                         {% else %}
                             ₴{{ product.price }}
                         {% endif %}
-                        <button class="btn btn-success float-end">Купити</button>
+                        <a class="btn btn-success float-end col-12 col-md-4 mb-3" onmousedown="addToBasket({{ product.id }})">Додати у корзину</a>
                     </p>
                 </div>
             </div>

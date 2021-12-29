@@ -15,7 +15,7 @@ class User(db.Model, UserMixin):
     firstname = db.Column(db.String(50), nullable=True)
     settlement = db.Column(db.String(50), nullable=True)
     address = db.Column(db.String(200), nullable=True)
-    roles = db.Column(db.JSON, nullable=False, default='[""]')
+    roles = db.Column(db.JSON, nullable=False, default=['user'])
     registered_on = db.Column(db.DateTime, nullable=False, default=datetime.datetime.now)
     last_login = db.Column(db.DateTime, nullable=True, default=None)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)

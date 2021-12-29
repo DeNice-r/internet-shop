@@ -1,17 +1,61 @@
+from __future__ import annotations
 from app import app, mail
 from flask import request, flash, abort
 from urllib.parse import urlparse, urljoin
 from flask_mail import Message
-from functools import wraps
-from flask_login import current_user
+from secrets import token_urlsafe
+import os
+import random
+import string
+
+
+token_64_sample = string.ascii_letters + string.digits + '-_'
+
+
+class UploadTypes:
+    product_upload = 'PRODUCT_UPLOAD'
+
+
+
+def token_64(n: int = 16):
+    return ''.join(random.choices(token_64_sample, k=n))
 
 
 def is_picture(filename: str):
+    # Перевіряємо, чи картинка прийнятна по її розширенню
     if '.' in filename:
         split = filename.rsplit('.', 1)
         if len(split) == 2:
             return split[1].lower() in app.config['PICTURE_EXTENSIONS']
     return False
+
+
+def secure_save_image(image, upload_type):
+    # якщо картинка підходить
+    if is_picture(image.filename):
+        # завантажуємо її
+        # Для початку, отримуємо розширення
+        ext = image.filename.split('.')[-1]
+        # Створюємо випадкове ім'я файлу (на випадок не безпечного імені файлу або кількох файлів з одним ім'ям)
+        filename = token_64() + '.' + ext
+        path = app.config[upload_type + '_FOLDER'] + filename
+        # Якщо ім'я зайняте, створюємо нове поки воно не буде унікальним
+        while os.path.isfile(path):
+            filename = token_urlsafe(16) + '.' + ext
+            path = app.config[upload_type + '_FOLDER'] + filename
+        # коли знайшли підходяще ім'я, зберігаємо картинку з цим іменем та повертаємо ім'я файла
+        image.save('static/' + path)
+        return path.split('/')[-1]
+
+
+def secure_remove_image(filename, upload_type):
+    # Якщо файл існує
+    if os.path.isfile('static/' + app.config[upload_type + '_FOLDER'] + filename):
+        # То видаляємо його
+        os.remove('static/' + app.config[upload_type + '_FOLDER'] + filename)
+    else:
+        # У іншому випадку виводимо повідомлення про те, що нічого видаляти
+        flash('Файл не існує на сервері.', 'alert alert-danger')
 
 
 def bn_to_br(text: str):

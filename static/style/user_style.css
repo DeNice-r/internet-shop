@@ -2,6 +2,10 @@
     font-size: calc(40px - 1vw);
 }
 
+.very-small {
+    font-size: calc(33px - 1vw);
+}
+
 .thumb-post img {
     object-fit: none; /* Do not scale the image */
     object-position: center; /* Center the image within the element */
@@ -18,4 +22,14 @@
 #carouselPhoto .carousel-indicators {
     position: static;
     margin-top: 10px;
+}
+
+.link {
+    text-decoration: none;
+    color: black;
+}
+
+.link:hover {
+    color: black;
+    text-decoration: underline lightgray;
 }

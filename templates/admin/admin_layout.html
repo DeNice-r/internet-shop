@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
     {% block head %}
-        <meta charset="UTF-8">
+        {% block meta %}
+            <meta charset="UTF-8">
+            <meta name='csrf-token' content="{{ csrf_token() }}">
+        {% endblock %}
         {% block style %}
             <link rel="shortcut icon" href="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'favicon.ico') }}">
             <link rel="stylesheet" href="{{ url_for('static', filename='/bootstrap/bootstrap.min.css') }}"/>
@@ -10,7 +13,7 @@
             <link rel="stylesheet" href="{{ url_for('static', filename='mdb5/css/hover_shadow.min.css') }}" />
         {% endblock %}
         {% block script %}
-            <script type="text/javascript" src="{{ url_for('static', filename='/bootstrap/bootstrap.bundle.min.js') }}"></script>
+            {% include 'shared/script.html' %}
         {% endblock %}
         <title>{% block title %}{% endblock %} - KISAdmin</title>
 
