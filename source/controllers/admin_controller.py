@@ -151,6 +151,8 @@ def product():
             form.specs.data = json.dumps(product_.specs)
             form.pictures.data = json.dumps(product_.pictures)
         return render_template('admin/product.html', form=form, product=product_)
+    else:
+        pass  # TODO: Створення нового товару!!!
     abort(404)
 
 

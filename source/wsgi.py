@@ -5,7 +5,7 @@ from controllers.main_controller import main
 from controllers.auth_controller import auth
 from controllers.products_controller import products
 from controllers.basket_controller import basket
-from controllers.news_controller import news
+from controllers.posts_controller import posts
 from controllers.contact_controller import contact
 from controllers.admin_controller import admin
 import controllers.error_controller
@@ -14,7 +14,7 @@ app.register_blueprint(main)
 app.register_blueprint(auth)
 app.register_blueprint(products)
 app.register_blueprint(basket)
-app.register_blueprint(news)
+app.register_blueprint(posts)
 app.register_blueprint(contact)
 app.register_blueprint(admin)
 # app.register_blueprint(error)

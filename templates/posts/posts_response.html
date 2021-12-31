@@ -1,0 +1,21 @@
+<div class="col-8 mx-auto">
+    {% for post in posts %}
+        <div class="mb-3">
+            <div class="card">
+                {% if post.picture %}
+                    <img src="{{ url_for('static', filename=config['POST_UPLOAD_FOLDER'] + post.picture)}}"
+                         class="card-img-top"
+                         alt="...">
+                {% endif %}
+                <div class="card-body">
+                    <a class="card-title link d-inline-block" href="{{ url_for('posts.post', post_id=post.id) }}"><h5 class="card-title">{{ post.title }}</h5></a>
+                    <p class="card-text">{{ post.content|truncate(500) }}</p>
+                </div>
+                <div class="card-footer text-muted">
+                    <div class="d-inline-block float-start">{{ post.updated.strftime('%d.%m.%Y %H:%M') }}</div>
+                    <div class="d-inline-block float-end">{{ post.get_author_name() }}</div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>

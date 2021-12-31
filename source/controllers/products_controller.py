@@ -65,11 +65,12 @@ def product(product_id: int):
     return render_template("products/product.html", product=Product.query.get(product_id))
 
 
-@products.route("/api/product/<int:product_id>", methods=('POST',))
-def api_product(product_id: int):
-    return render_template("products/product.html", product=Product.query.get(product_id))
-
-
-@products.route("/api/get_product/<int:product_id>")
-def get_product(product_id: int):
-    return Product.query.get(product_id).as_json_response()
+# Deprecated?
+# @products.route("/api/product/<int:product_id>", methods=('POST',))
+# def api_product(product_id: int):
+#     return render_template("products/product.html", product=Product.query.get(product_id))
+#
+#
+# @products.route("/api/get_product/<int:product_id>")
+# def get_product(product_id: int):
+#     return Product.query.get(product_id).as_json_response()

@@ -18,3 +18,6 @@ class Post(db.Model):
         self.content = content
         self.picture = picture
         self.author = author
+
+    def get_author_name(self):
+        return User.query.get(self.author).username

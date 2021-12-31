@@ -2,7 +2,7 @@ alerts = document.querySelectorAll('.alert');
 alerts.forEach((elem, index) => {
     setTimeout(() => {
         fade(elem)
-    }, 3000 + 2000 * index)
+    }, 5000 + 2000 * index)
 })
 
 

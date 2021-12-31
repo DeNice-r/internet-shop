@@ -20,53 +20,61 @@
     {% endblock %}
 </head>
 <body>
-{% block navbar %}
-    <header class="mb-3">
-        <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom box-shadow">
-            <div class="container-lg">
-                <a class="navbar-brand" href="{{ url_for('admin.index') }}"><img src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'favicon.ico') }}" style="width: 35px; height: 35px;"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="{{ url_for('main.index') }}">Сайт</a>
-                        </li>
-                        {# All items below #} <li class="nav-item ms-auto"></li> {# will be right-sided #}
+<div class="min-vh-100">
+    {% block navbar %}
+        <header class="mb-3">
+            <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom box-shadow">
+                <div class="container-lg">
+                    <a class="navbar-brand" href="{{ url_for('admin.index') }}"><img src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'favicon.ico') }}" style="width: 35px; height: 35px;"></a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                        <ul class="navbar-nav flex-grow-1">
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="{{ url_for('main.index') }}">Сайт</a>
+                            </li>
+                            {# All items below #} <li class="nav-item ms-auto"></li> {# will be right-sided #}
 
-                        {% if current_user.has_role('editor') %}
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="{{ url_for('admin.news') }}">Новини</a>
-                            </li>
-                        {% endif %}
-                        {% if current_user.has_role('seller') %}
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="{{ url_for('admin.products') }}">Товари</a>
-                            </li>
-                        {% endif %}
-                        {% if current_user.has_role('support') %}
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="{{ url_for('admin.support') }}">Підтримка</a>
-                            </li>
-                        {% endif %}
-                        {% if current_user.has_role('admin') %}
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="{{ url_for('admin.users') }}">Користувачі</a>
-                            </li>
-                        {% endif %}
-                    </ul>
+                            {% if current_user.has_role('editor') %}
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="{{ url_for('admin.news') }}">Новини</a>
+                                </li>
+                            {% endif %}
+                            {% if current_user.has_role('seller') %}
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="{{ url_for('admin.products') }}">Товари</a>
+                                </li>
+                            {% endif %}
+                            {% if current_user.has_role('support') %}
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="{{ url_for('admin.support') }}">Підтримка</a>
+                                </li>
+                            {% endif %}
+                            {% if current_user.has_role('admin') %}
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" href="{{ url_for('admin.users') }}">Користувачі</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-    </header>
-{% endblock %}
-<div class="container-fluid">
-    {% for classes, message in get_flashed_messages(with_categories=True) %}
-        <div class="alert alert-{{ classes }} message">{{ message | safe }}</div>
-    {% endfor %}
-    {% block content %}
+            </nav>
+        </header>
     {% endblock %}
+    <div class="container-fluid">
+        {% for classes, message in get_flashed_messages(with_categories=True) %}
+            <div class="alert alert-{{ classes }} message">{{ message | safe }}</div>
+        {% endfor %}
+        {% block content %}
+        {% endblock %}
+    </div>
 </div>
+<footer class="text-center p-0 bg-light text-muted border-top mt-3">
+    <div class="text-center bg-light m-0 p-2">
+        ©
+        <a href="https://t.me/denyskalinovskyi" class="text-reset">Каліновський Денис</a>
+    </div>
+</footer>
 </body>
 </html>

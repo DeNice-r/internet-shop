@@ -35,7 +35,7 @@ def confirm_token(token, expiration=3600):
 def login():
     if current_user.is_authenticated:
         flash('Ви вже увійшли.', 'warning')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('products.index'))
 
     form = LoginForm()
     if form.validate_on_submit():
@@ -73,7 +73,7 @@ def validate_email(text: str):
 def register():
     if current_user.is_authenticated:
         flash('Ви вже зареєстровані.', 'warning')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('products.index'))
     form = RegisterForm()
     if form.validate_on_submit():
         if validate_username(form.username.data) and validate_email(form.email.data):
@@ -110,7 +110,7 @@ def confirm(token):
         email = confirm_token(token)
     except:
         flash('Посилання для підтвердження пошти помилкове або застаріло.', 'danger')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('products.index'))
     user = User.query.filter_by(email=email).first_or_404()
     if user.confirmed:
         flash('Пошту вже підтверджено. Будь-ласка, авторизуйтесь.', 'warning')
@@ -194,11 +194,11 @@ def forgot_password_change(token):
             return redirect(url_for('.login'))
         return render_template('auth/forgot_password_change.html', form=form)
     flash('Посилання для відновлення профілю помилкове або застаріло.', 'danger')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('products.index'))
 
 
 @auth.route('/auth/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.index'))
+    return redirect(url_for('products.index'))

@@ -74,6 +74,6 @@ def order(order_token):
         order_id = confirm_token(order_token)
     except:
         flash('Замовлення не знайдено.', 'danger')
-        return redirect(url_for('main.index'))
+        return redirect(url_for('products.index'))
     order_ = Order.query.get(order_id)
     return render_template("basket/order_info.html", order=order_, order_token=order_token)

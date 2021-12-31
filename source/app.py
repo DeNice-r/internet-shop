@@ -40,6 +40,8 @@ app.config['IMAGE_FOLDER'] = 'image/'
 app.config['UPLOAD_FOLDER'] = 'upload/'
 # Папка, де будуть збережені файли товарів
 app.config['PRODUCT_UPLOAD_FOLDER'] = app.config['UPLOAD_FOLDER'] + 'product/'
+# Папка, де будуть збережені файли новин
+app.config['POST_UPLOAD_FOLDER'] = app.config['UPLOAD_FOLDER'] + 'post/'
 # Прийнятні розширення картинок
 app.config['PICTURE_EXTENSIONS'] = ['apng', 'avif', 'gif', 'jpg', 'jpeg', 'jfif', 'pjpeg', 'pjp', 'png', 'svg', 'webp']
 
