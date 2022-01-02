@@ -38,7 +38,7 @@
 
                             {% if current_user.has_role('editor') %}
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" href="{{ url_for('admin.news') }}">Новини</a>
+                                    <a class="nav-link text-dark" href="{{ url_for('admin.posts') }}">Новини</a>
                                 </li>
                             {% endif %}
                             {% if current_user.has_role('seller') %}

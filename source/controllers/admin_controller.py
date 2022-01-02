@@ -8,6 +8,7 @@ from admin_forms import *
 from flask_login import current_user
 from models.user import User
 from models.product import Product
+from models.post import Post
 from functools import wraps
 from werkzeug.security import generate_password_hash
 from controllers.auth_controller import generate_confirmation_token
@@ -97,6 +98,7 @@ def product():
     if product_id:
         product_ = Product.query.get(product_id)
         if delete == '1':
+            # TODO: видалення через ajax?
             try:
                 db.session.delete(product_)
                 db.session.commit()
@@ -162,11 +164,133 @@ def product():
     return render_template('admin/product.html', form=form)
 
 
-@admin.route("/admin/news", methods=('GET', 'POST'))
+@admin.route("/admin/posts", methods=('GET', 'POST'))
 @role_required('editor')
-def news():
+def posts():
     n = None  # News.query.all()
-    return render_template('admin/news.html', news=n)
+    return render_template('admin/posts.html', news=n)
+
+
+@admin.route("/api/admin/users", methods=('POST',))
+@role_required('editor')
+def get_posts():
+    return 0
+    search = MultiDict(json.loads(unquote(request.headers.get('search'))))
+    u = User.query
+    if search.get('id'):
+        u = u.get(search['id'])
+    if search.get('username'):
+        u = u.filter(func.lower(User.username).contains(func.lower(search['username'])))
+    if search.get('email'):
+        u = u.filter(func.lower(User.email).contains(func.lower(search['email'])))
+    if search.get('firstname'):
+        u = u.filter(func.lower(User.firstname).contains(func.lower(search['firstname'])))
+    if search.get('phone'):
+        u = u.filter(func.lower(User.phone).contains(func.lower(search['phone'])))
+    if search.get('settlement'):
+        u = u.filter(func.lower(User.settlement).contains(func.lower(search['settlement'])))
+    if search.get('address'):
+        u = u.filter(func.lower(User.address).contains(func.lower(search['address'])))
+    if search.get('confirmed'):
+        u = u.filter(User.confirmed == (search['confirmed'] == '+'))
+    if search.get('roles'):
+        r = []
+        for user_ in u:
+            if search['roles'] in str(user_.roles):
+                r.append(user_)
+        u = r
+    if search.get('registered_on'):
+        r = []
+        for user_ in u:
+            if search['registered_on'] in str(user_.registered_on):
+                r.append(user_)
+        u = r
+    if search.get('last_login'):
+        r = []
+        for user_ in u:
+            if search['last_login'] in str(user_.last_login):
+                r.append(user_)
+        u = r
+
+    if u == User.query:
+        u = u.all()
+
+    items_per_page = int(search['items_per_page']) if search.get('items_per_page') else 20
+    page = request.headers.get('page')
+    page = int(page) - 1 if page else 0
+
+    try:
+        is_iterable_test = iter(u)
+    except TypeError:
+        u = [u]
+    try:
+        number_of_pages = ceil(len(u) / items_per_page)
+    except TypeError:
+        number_of_pages = ceil(u.count() / items_per_page)
+    u = u[items_per_page * page:items_per_page * (page + 1)]
+
+    return jsonify({'content': render_template("admin/users_response.html",
+                                               users=u),
+                    'pagination': render_template('shared/pagination.html',
+                                                  number_of_pages=number_of_pages,
+                                                  page=page + 1)})
+
+
+@admin.route("/admin/post", methods=('GET', 'POST'))
+@role_required('editor')
+def post():
+    post_id = request.args.get('post_id')
+    delete = request.args.get('delete')
+    form = PostForm()
+    if post_id:
+        post_ = Post.query.get(post_id)
+        if delete == '1':
+            # TODO: видалення через ajax?
+            try:
+                db.session.delete(post_)
+                db.session.commit()
+            except BaseException as e:
+                flash(f'При видаленні виникла помилка: {e}', 'danger')
+            else:
+                flash('Новину успішно видалено.', 'success')
+            return redirect(url_for('.posts'))
+
+        if form.validate_on_submit():
+            try:
+                post_.title = form.title.data
+                post_.content = form.content.data
+
+                picture = request.files.get('picture')
+                new_picture = secure_save_image(picture, UploadTypes.post_upload)
+                if new_picture:
+                    secure_remove_image(post_.picture, UploadTypes.post_upload)
+                    post_.picture = new_picture
+
+                db.session.commit()
+            except BaseException as e:
+                flash(f'При оновленні виникла помилка: {e}', 'danger')
+            else:
+                flash('Дані новини успішно змінено.', 'success')
+            return redirect(url_for('.posts'))
+        else:
+            form.process(obj=post_)
+        return render_template('admin/post.html', form=form, post=post_)
+    elif form.validate_on_submit():
+        try:
+            picture = request.files.get('picture')
+            post_ = Post(
+                form.title.data,
+                form.content.data,
+                secure_save_image(picture, UploadTypes.post_upload)
+            )
+            db.session.add(post_)
+            db.session.commit()
+        except BaseException as e:
+            flash(f'При оновленні виникла помилка: {e}', 'danger')
+        else:
+            flash(f'Товар успішно створено з ID #{post_.id}.', 'success')
+        return redirect(url_for('.posts'))
+    return render_template('admin/post.html', form=form)
 
 
 @admin.route("/admin/support", methods=('GET', 'POST'))

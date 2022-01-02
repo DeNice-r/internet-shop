@@ -14,10 +14,11 @@ token_64_sample = string.ascii_letters + string.digits + '-_'
 
 class UploadTypes:
     product_upload = 'PRODUCT_UPLOAD'
+    post_upload = 'POST_UPLOAD'
 
 
 
-def token_64(n: int = 16):
+def token_64(n: int = 10):
     return ''.join(random.choices(token_64_sample, k=n))
 
 
@@ -41,7 +42,7 @@ def secure_save_image(image, upload_type: str) -> str:
         path = app.config[upload_type + '_FOLDER'] + filename
         # Якщо ім'я зайняте, створюємо нове поки воно не буде унікальним
         while os.path.isfile(path):
-            filename = token_urlsafe(16) + '.' + ext
+            filename = token_64() + '.' + ext
             path = app.config[upload_type + '_FOLDER'] + filename
         # коли знайшли підходяще ім'я, зберігаємо картинку з цим іменем та повертаємо ім'я файла
         image.save('static/' + path)

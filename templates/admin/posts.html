@@ -1,0 +1,39 @@
+{% extends "admin/admin_layout.html" %}
+{{ super() }}
+{% block title %}Новини{% endblock %}
+{% block content %}
+    <table class="table table-sm table-responsive table-bordered table-striped table-light table-hover mb-0">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Заголовок</th>
+            <th>Текст</th>
+            <th>Ціна</th>
+            <th>Знижка</th>
+            <th>В наявності</th>
+            <th>Характеристики</th>
+            <th>Востаннє оновлено</th>
+        </tr>
+        </thead>
+        <tbody id="ajax-content">
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.settlement }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.registered_on }}</td>
+                <td>{{ user.last_login }}</td>
+                <td>{{ '➕' if user.confirmed else '➖' }}</td>
+                <td>
+                    <a class="btn btn-info" href="{{ url_for('admin_users', user_id=user.id) }}">✏</a>
+                    <a class="btn btn-danger" href="{{ url_for('admin_users', user_id=user.id, delete='1') }}">🗑</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

@@ -1,9 +1,9 @@
-<div class="row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-2 mb-4 animate__animated animate__fadeInRight">
+<div class="row row-cols-md-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-2 mb-4">
     {% for product in products %}
         {% if product.pictures %}
             {% set picture = product.pictures[0] %}
         {% endif %}
-        <div class="col ">
+        <div class="col">
             <div class="card h-100 {{ 'hover-shadow' if product.in_stock() }}" style="{{ 'color: gray;' if not product.in_stock() }}">
                 <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + picture if picture else config['IMAGE_FOLDER'] + 'placeholder.png') }}"
                      class="card-img-top" {{ 'style="filter: grayscale(100%)"'|safe if not product.in_stock() }}

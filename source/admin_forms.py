@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TelField, EmailField, PasswordField, SubmitField, IntegerField, TextAreaField,\
-    MultipleFileField, FloatField, HiddenField
+    MultipleFileField, FloatField, HiddenField, FileField
 from wtforms.validators import DataRequired, Optional, Length, EqualTo
 
 
@@ -44,4 +44,13 @@ class ProductForm(FlaskForm):
     discount = FloatField('Знижка', default=0.)
     stock = IntegerField('В наявності', default=1)
     specs = HiddenField()
+    submit = SubmitField('Зберегти')
+
+
+class PostForm(FlaskForm):
+    title = StringField('Заголовок', validators=[DataRequired("Заголовок новини - обов'язкове поле!"),
+                                                 Length(1, 256, "Назва товару недопустимої довжини! (допустима "
+                                                                "довжина від 1 до 256 символів).")])
+    content = TextAreaField('Текст', validators=[DataRequired("Текст новини - обов'язкове поле!")])
+    picture = FileField('Картинка')
     submit = SubmitField('Зберегти')

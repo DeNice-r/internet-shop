@@ -1,17 +1,25 @@
 {% extends "shared/layout.html" %}
 {{ super() }}
+{% block style %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/animate.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='mdb5/css/hover_shadow.min.css') }}" />
+{% endblock %}
 {% block script %}
     {{ super() }}
     <script type="text/javascript" src="{{ url_for('static', filename='script/ajax.js') }}" defer></script>
 {% endblock %}
 {% block title %}Новини{% endblock %}
 {% block content %}
+    {% if current_user.has_role('editor') %}
+        <a class="btn btn-success mb-3 col-12" href="{{ url_for('admin.post') }}">Створити новину</a>
+    {% endif %}
     <div id="ajax-spinner">
         <div class="d-flex justify-content-center" hidden>
             <div class="spinner-border text-primary">
             </div>
         </div>
     </div>
-<div id="ajax-content"></div>
+<div id="ajax-content" class="animate__animated"></div>
 <div id="ajax-pagination"></div>
 {% endblock %}

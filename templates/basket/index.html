@@ -74,7 +74,7 @@
     {% endif %}
     <div id="basket-empty" {{ 'hidden' if basket }}>
         <h5 class="text-center">Ви ще нічого не додали до корзини</h5>
-        <img id="basket-empty" class="d-block rounded mx-auto my-auto" src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'empty-basket.png') }}" alt="В корзині нічого немає"/>
+        <img id="basket-empty" class="d-block rounded mx-auto my-auto col-8" src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'empty-basket.png') }}" alt="В корзині нічого немає"/>
     </div>
 
 {% endblock %}

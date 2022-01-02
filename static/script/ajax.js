@@ -118,8 +118,8 @@ function loadPage(page=-1, popstate=false, target=null){
         let response = JSON.parse(request.response)
         container.innerHTML = response['content'];
         pagination.innerHTML = response['pagination'];
-        container.classList.add('animate__fadeInRight')
-        container.classList.remove('animate__fadeOutLeft')
+        container.classList.add('animate__fadeIn')
+        container.classList.remove('animate__fadeOut')
         try {
             page = +pagination.querySelector('#current_page')?.innerHTML;
             if (isNaN(page)) {
@@ -132,8 +132,8 @@ function loadPage(page=-1, popstate=false, target=null){
         if (!popstate)
             setUrlParam('page', page);
     }
-    container.classList.remove('animate__fadeInRight')
-    container.classList.add('animate__fadeOutLeft')
+    container.classList.remove('animate__fadeIn')
+    container.classList.add('animate__fadeOut')
     pagination.innerHTML = '';
     spinner.hidden = false;
     request.send();
