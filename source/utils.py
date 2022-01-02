@@ -30,7 +30,7 @@ def is_picture(filename: str):
     return False
 
 
-def secure_save_image(image, upload_type):
+def secure_save_image(image, upload_type: str) -> str:
     # якщо картинка підходить
     if is_picture(image.filename):
         # завантажуємо її
@@ -48,12 +48,16 @@ def secure_save_image(image, upload_type):
         return path.split('/')[-1]
 
 
-def secure_save_images(images: list, upload_type):
+def secure_save_images(images: list, upload_type) -> list:
+    r = []
     for image in images:
-        secure_save_image(image, upload_type)
+        path = secure_save_image(image, upload_type)
+        if path:
+            r.append(path)
+    return r
 
 
-def secure_remove_image(filename, upload_type):
+def secure_remove_image(filename: str, upload_type: str) -> None:
     # Якщо файл існує
     if os.path.isfile('static/' + app.config[upload_type + '_FOLDER'] + filename):
         # То видаляємо його

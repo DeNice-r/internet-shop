@@ -13,7 +13,12 @@
 {% block title %}Товари{% endblock %}
 {% block content %}
     <div class="card mb-3">
-        <h5 class="card-header">Пошук</h5>
+        <div class="card-header">
+            <h5 class="m-0 d-inline-block">Пошук</h5>
+            {% if current_user.has_role('seller') %}
+                <a class="btn btn-success float-end" href="{{ url_for('admin.product') }}">Додати новий товар</a>
+            {% endif %}
+        </div>
         <div class="card-body">
             <form class="row row-cols-auto g-1 align-items-center col-12" method="get" id="search_form">
                 <div class="col-3">

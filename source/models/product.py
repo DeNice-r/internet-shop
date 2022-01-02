@@ -1,4 +1,5 @@
 import datetime
+import json
 from flask import jsonify
 from app import db
 
@@ -15,12 +16,16 @@ class Product(db.Model):
     desc = db.Column(db.Text, nullable=True)
     updated = db.Column(db.DateTime, default=datetime.datetime.now, onupdate=datetime.datetime.now)
 
-    def __init__(self, title, price=None, discount=None, stock=None, specs=None, desc=None):
+    def __init__(self, title, pictures=None, price=None, discount=None, stock=None, specs=None, desc=None):
         self.title = title
+        self.pictures = pictures
         self.price = price
         self.discount = discount
         self.stock = stock
-        self.specs = specs
+        if specs != '':
+            self.specs = json.loads(specs)
+        else:
+            self.specs = {}
         self.desc = desc
 
     def in_stock(self):

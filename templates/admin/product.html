@@ -22,18 +22,20 @@
     {% endfor %}
     <div class="mx-auto col-xxl-6 col-xl-7 col-lg-8 col-md-10 col-sm-12">
         <a class="btn btn-danger w-100" href="{{ url_for('admin.products') }}">Відміна</a>
-        <h1 class="display-6 d-inline-block">Товар</h1><span class="text-muted small float-end">#{{ product.id }}</span>
+        <h1 class="display-6 d-inline-block">Товар</h1><span class="text-muted small float-end">#{{ product.id if product else '---'}}</span>
         <form method="post" enctype="multipart/form-data">
             {{ form.hidden_tag() }}
             {{ form.title.label }} {{ form.title(class_="form-control mb-3") }}
             {{ form.desc.label }} {{ form.desc(class_="form-control mb-3") }}
             {{ form.new_pictures.label }} {{ form.new_pictures(class_="form-control mb-3") }}
-            <div class="mb-3">
-                <button class="btn btn-secondary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#picture-container" aria-expanded="false" aria-controls="picture-container">
-                    Видалити картинки
-                </button>
-                <div id="picture-container" class="collapse mb-3"></div>
-            </div>
+            {% if product and product.pictures|length > 0 %}
+                <div class="mb-3">
+                    <button class="btn btn-secondary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#picture-container" aria-expanded="false" aria-controls="picture-container">
+                        Видалити картинки
+                    </button>
+                    <div id="picture-container" class="collapse mb-3"></div>
+                </div>
+            {% endif %}
             {{ form.price.label }} {{ form.price(class_="form-control mb-3") }}
             {{ form.discount.label }} {{ form.discount(class_="form-control mb-3") }}
             {{ form.stock.label }} {{ form.stock(class_="form-control mb-3") }}
@@ -44,14 +46,16 @@
                 <div id="specCollapse" class="collapse">
                     <table class="table table-bordered table-striped">
                         <tbody>
-                        {% for spec in product.specs %}
-                            <tr>
-                                <td>{{ loop.index }}</td>
-                                <td>{{ spec }}</td>
-                                <td>{{ product.specs[spec] }}</td>
-                                <td><input type="button" class="form-control btn btn-danger btn-remove-spec" value="❌"></td>
-                            </tr>
-                        {% endfor %}
+                        {% if product %}
+                            {% for spec in product.specs %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ spec }}</td>
+                                    <td>{{ product.specs[spec] }}</td>
+                                    <td><input type="button" class="form-control btn btn-danger btn-remove-spec" value="❌"></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
                         <tr>
                             <td></td>
                             <td><input type="text" class="form-control" placeholder="Характеристика"></td>

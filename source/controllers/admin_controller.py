@@ -11,7 +11,7 @@ from models.product import Product
 from functools import wraps
 from werkzeug.security import generate_password_hash
 from controllers.auth_controller import generate_confirmation_token
-from utils import send_email, secure_save_image, secure_remove_image, UploadTypes
+from utils import send_email, secure_save_image, secure_save_images, secure_remove_image, UploadTypes
 from multidict import MultiDict
 from math import ceil
 from sqlalchemy.orm.attributes import flag_modified
@@ -126,11 +126,7 @@ def product():
                         pic_index += 1
 
                 pictures = request.files.getlist('new_pictures')
-                if pictures:
-                    for pic in pictures:
-                        filename = secure_save_image(pic, UploadTypes.product_upload)
-                        if filename is not None:
-                            product_.pictures.append(filename)
+                product_.pictures.extend(secure_save_images(pictures, UploadTypes.product_upload))
 
                 flag_modified(product_, 'pictures')
                 db.session.commit()
@@ -145,16 +141,25 @@ def product():
             form.pictures.data = json.dumps(product_.pictures)
         return render_template('admin/product.html', form=form, product=product_)
     elif form.validate_on_submit():
-        product_ = Product(
-            form.title.data,
-            form.price.data,
-            form.discount.data,
-            form.stock.data,
-            form.specs.data,
-            form.desc.data
-        )
-        pass  # TODO: Створення нового товару!!!
-    abort(404)
+        try:
+            pictures = request.files.getlist('new_pictures')
+            product_ = Product(
+                form.title.data,
+                secure_save_images(pictures, UploadTypes.product_upload),
+                form.price.data,
+                form.discount.data,
+                form.stock.data,
+                form.specs.data,
+                form.desc.data
+            )
+            db.session.add(product_)
+            db.session.commit()
+        except BaseException as e:
+            flash(f'При оновленні виникла помилка: {e}', 'danger')
+        else:
+            flash(f'Товар успішно створено з ID #{product_.id}.', 'success')
+        return redirect(url_for('.products'))
+    return render_template('admin/product.html', form=form)
 
 
 @admin.route("/admin/news", methods=('GET', 'POST'))
