@@ -67,10 +67,6 @@ def secure_remove_image(filename: str, upload_type: str) -> None:
         flash('Файл не існує на сервері.', 'alert alert-danger')
 
 
-def bn_to_br(text: str):
-    return text.split('\r\n')
-
-
 def is_url_safe(target: str):
     if target is None:
         return False
