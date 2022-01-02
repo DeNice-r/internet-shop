@@ -1,2 +1,2 @@
 # Internet-shop
-My first ZTU coursework of С1 21H2.
+My first SUZP coursework of С1 21H2.
