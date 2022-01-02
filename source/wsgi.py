@@ -1,7 +1,6 @@
 from app import app, db
 
 # Контроллери
-from controllers.main_controller import main
 from controllers.auth_controller import auth
 from controllers.products_controller import products
 from controllers.basket_controller import basket
@@ -10,7 +9,6 @@ from controllers.contact_controller import contact
 from controllers.admin_controller import admin
 import controllers.error_controller
 
-app.register_blueprint(main)
 app.register_blueprint(auth)
 app.register_blueprint(products)
 app.register_blueprint(basket)
