@@ -91,13 +91,6 @@ def products():
 @admin.route("/admin/product", methods=('GET', 'POST'))
 @role_required('seller')
 def product():
-    # REM
-    # p = Product.query.all()
-    # for pp in p:
-    #     pp.pictures = json.loads(json.dumps(pp.pictures))
-    # db.session.commit()
-    # OVE
-
     product_id = request.args.get('product_id')
     delete = request.args.get('delete')
     form = ProductForm()
@@ -116,11 +109,11 @@ def product():
         if form.validate_on_submit():
             try:
                 product_.title = form.title.data
-                product_.desc = form.desc.data
                 product_.price = form.price.data
                 product_.discount = form.discount.data
                 product_.stock = form.stock.data
                 product_.specs = json.loads(form.specs.data)
+                product_.desc = form.desc.data
 
                 modified_pictures = form.pictures.data
 
@@ -151,7 +144,15 @@ def product():
             form.specs.data = json.dumps(product_.specs)
             form.pictures.data = json.dumps(product_.pictures)
         return render_template('admin/product.html', form=form, product=product_)
-    else:
+    elif form.validate_on_submit():
+        product_ = Product(
+            form.title.data,
+            form.price.data,
+            form.discount.data,
+            form.stock.data,
+            form.specs.data,
+            form.desc.data
+        )
         pass  # TODO: Створення нового товару!!!
     abort(404)
 

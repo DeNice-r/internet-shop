@@ -1,6 +1,6 @@
 import time
 
-from flask import render_template, request, Blueprint, jsonify, flash
+from flask import render_template, request, Blueprint, jsonify, flash, redirect, url_for
 from flask_login import current_user
 from models.product import Product
 from math import ceil
@@ -10,6 +10,11 @@ from sqlalchemy import or_, func, asc, desc
 from urllib.parse import unquote
 
 products = Blueprint('products', __name__)
+
+
+@products.route('/')
+def slash_redirect():
+    return redirect(url_for('.index'))
 
 
 @products.route("/products")

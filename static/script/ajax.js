@@ -89,7 +89,7 @@ function getUrlParam(param) {
     return urlParams.get(param);
 }
 
-
+// TODO: fix spamming history pushes.
 function loadPage(page=-1, popstate=false, target=null){
     if (csrf_token === null)
         csrf_token = document.querySelector('meta[name="csrf-token"]').content;

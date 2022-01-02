@@ -48,6 +48,11 @@ def secure_save_image(image, upload_type):
         return path.split('/')[-1]
 
 
+def secure_save_images(images: list, upload_type):
+    for image in images:
+        secure_save_image(image, upload_type)
+
+
 def secure_remove_image(filename, upload_type):
     # Якщо файл існує
     if os.path.isfile('static/' + app.config[upload_type + '_FOLDER'] + filename):
