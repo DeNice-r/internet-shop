@@ -2,30 +2,19 @@
 {{ super() }}
 {% block title %}Index{% endblock %}
 {% block content %}
-    {% for field in form %}
-    {% if field.errors %}
-    {% for error in field.errors %}
-    <div class="alert alert-danger">
-    {{ error }}
-    </div>
-    {% endfor %}
-    {% endif %}
-    {% endfor %}
-<div class="mx-auto col-4">
-<!--    <div class="mx-auto col-6">-->
+    <div class="mx-auto col-4">
         <h1 class="display-6">Реєстрація</h1>
-<!--    </div>-->
-    <form method="post">
-        {{ form.hidden_tag() }}
-        {{ form.username.label }} {{ form.username(class_="form-control mb-3") }}
-        {{ form.email.label }} {{ form.email(class_="form-control mb-3") }}
-        {{ form.password.label }} {{ form.password(class_="form-control mb-2") }}
-        {{ form.confirm_password.label }} {{ form.confirm_password(class_="form-control mb-5") }}
-        {{ form.phone.label }} {{ form.phone(class_="form-control mb-3") }}
-        {{ form.firstname.label }} {{ form.firstname(class_="form-control mb-3") }}
-        {{ form.settlement.label }} {{ form.settlement(class_="form-control mb-3") }}
-        {{ form.address.label }} {{ form.address(class_="form-control mb-2") }}
-        {{ form.submit(class_="w-100 px-auto btn btn-primary") }}
-    </form>
-</div>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            {{ form.username.label }} {{ form.username(class_="form-control mb-3") }}
+            {{ form.email.label }} {{ form.email(class_="form-control mb-3") }}
+            {{ form.password.label }} {{ form.password(class_="form-control mb-2") }}
+            {{ form.confirm_password.label }} {{ form.confirm_password(class_="form-control mb-5") }}
+            {{ form.phone.label }} {{ form.phone(class_="form-control mb-3") }}
+            {{ form.firstname.label }} {{ form.firstname(class_="form-control mb-3") }}
+            {{ form.settlement.label }} {{ form.settlement(class_="form-control mb-3") }}
+            {{ form.address.label }} {{ form.address(class_="form-control mb-2") }}
+            {{ form.submit(class_="w-100 px-auto btn btn-primary") }}
+        </form>
+    </div>
 {% endblock %}

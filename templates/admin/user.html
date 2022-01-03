@@ -2,15 +2,6 @@
 {{ super() }}
 {% block title %}Редагування{% endblock %}
 {% block content %}
-    {% for field in form %}
-        {% if field.errors %}
-            {% for error in field.errors %}
-                <div class="alert alert-danger">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
     <div class="mx-auto col-xxl-4 col-xl-5 col-lg-6 col-md-10 col-sm-12">
         <a class="btn btn-danger w-100" href="{{ url_for('admin.users') }}">Відміна</a>
         <h1 class="display-6 d-inline-block">Профіль</h1><span class="text-muted small float-end">#{{ user.id }}</span>

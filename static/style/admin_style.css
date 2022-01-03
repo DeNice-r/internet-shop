@@ -5,3 +5,12 @@
 th > input {
     width: 100%;
 }
+
+.link {
+    text-decoration: none;
+    color: black;
+}
+
+.link:hover {
+    color: black;
+}

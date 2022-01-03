@@ -49,7 +49,7 @@ class ProductForm(FlaskForm):
 
 class PostForm(FlaskForm):
     title = StringField('Заголовок', validators=[DataRequired("Заголовок новини - обов'язкове поле!"),
-                                                 Length(1, 256, "Назва товару недопустимої довжини! (допустима "
+                                                 Length(1, 256, "Заголовок новини недопустимої довжини! (допустима "
                                                                 "довжина від 1 до 256 символів).")])
     content = TextAreaField('Текст', validators=[DataRequired("Текст новини - обов'язкове поле!")])
     picture = FileField('Картинка')

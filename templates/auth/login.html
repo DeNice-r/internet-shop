@@ -2,15 +2,15 @@
 {{ super() }}
 {% block title %}Index{% endblock %}
 {% block content %}
-<div class="mx-auto col-lg-4 col-md-8 col-sm-12">
-    <h1 class="display-6">Вхід</h1>
-    <form method="post">
-        {{ form.hidden_tag() }}
-        {{ form.username.label }} {{ form.username(class_="form-control mb-2") }}
-        {{ form.password.label }} {{ form.password(class_="form-control") }}
-        <div><a href="{{ url_for('auth.forgot_password_send') }}" class="mb-3">Відновити пароль</a></div>
-        {{ form.remember_me(class_="form-check-input mb-2") }} {{ form.remember_me.label(class="form-check-label") }}
-        {{ form.submit(class_="w-100 px-auto btn btn-primary") }}
-    </form>
-</div>
+    <div class="mx-auto col-lg-4 col-md-8 col-sm-12">
+        <h1 class="display-6">Вхід</h1>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            {{ form.username.label }} {{ form.username(class_="form-control mb-2") }}
+            {{ form.password.label }} {{ form.password(class_="form-control") }}
+            <div><a href="{{ url_for('auth.forgot_password_send') }}" class="mb-3">Відновити пароль</a></div>
+            {{ form.remember_me(class_="form-check-input mb-2") }} {{ form.remember_me.label(class="form-check-label") }}
+            {{ form.submit(class_="w-100 px-auto btn btn-primary") }}
+        </form>
+    </div>
 {% endblock %}

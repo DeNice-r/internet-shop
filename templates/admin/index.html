@@ -1,6 +1,49 @@
 {% extends "admin/admin_layout.html" %}
 {{ super() }}
+{% block style %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='style/animate.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='mdb5/css/hover_shadow.min.css') }}" />
+{% endblock %}
 {% block title %}Панель управління{% endblock %}
 {% block content %}
-Панель
+<h3 class="text-center mb-3">Панель управління</h3>
+<div class="mx-auto row-cols-xl-2 row-cols-1 row g-3 mb-3 col-6 text-center">
+{% if current_user.has_role('editor') %}
+    <div class="col">
+        <div class="card hover-shadow h-100">
+            <div class="card-body">
+                <a class="card-title my-auto link d-inline-block stretched-link" href="{{ url_for('.posts') }}"><h1 class="display-1 card-title">Новини</h1></a>
+            </div>
+        </div>
+    </div>
+{% endif %}
+{% if current_user.has_role('seller') %}
+    <div class="col">
+        <div class="card hover-shadow h-100">
+            <div class="card-body">
+                <a class="card-title link d-inline-block stretched-link" href="{{ url_for('.products') }}"><h1 class="card-title display-1">Товари</h1></a>
+            </div>
+        </div>
+    </div>
+{% endif  %}
+{% if current_user.has_role('support') %}
+    <div class="col">
+        <div class="card hover-shadow h-100">
+            <div class="card-body">
+                <a class="card-title link d-inline-block stretched-link" href="{{ url_for('.support') }}"><h1 class="card-title display-1">Підтримка</h1></a>
+            </div>
+        </div>
+    </div>
+{% endif  %}
+{% if current_user.has_role('admin') %}
+    <div class="col">
+        <div class="card hover-shadow h-100">
+            <div class="card-body">
+                <a class="card-title link d-inline-block stretched-link" href="{{ url_for('.users') }}"><h1 class="card-title display-1">Користувачі</h1></a>
+            </div>
+        </div>
+    </div>
+{% endif  %}
+</div>
 {% endblock %}

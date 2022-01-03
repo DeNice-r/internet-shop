@@ -107,4 +107,20 @@ class OrderForm(FlaskForm):
     submit = SubmitField('Зберегти')
 
 
+class AppealForm(FlaskForm):
+    title = StringField('Заголовок', validators=[DataRequired("Заголовок звернення - обов'язкове поле!"),
+                                                 Length(1, 256, "Назва товару недопустимої довжини! (допустима "
+                                                                "довжина від 1 до 256 символів).")])
+    content = TextAreaField('Текст', validators=[DataRequired("Текст звернення - обов'язкове поле!")])
+    firstname = StringField("Ім'я", validators=[Optional(), Length(0, 50, "Ім'я недопустимої довжини! (допустима "
+                                                                          "довжина до 50 символів).")])
+    email = EmailField('Електронна пошта', validators=[Optional(),
+                                                       Length(5, 320, "Пошта недопустимої довжини! (допустима "
+                                                                      "довжина від 5 до 320 символів)")])
+    phone = TelField('Мобільний телефон', validators=[Optional(),
+                                                      Length(9, 13, "Телефон недопустимої довжини! (допустима "
+                                                                    "довжина від 9 до 13 символів).")])
+    submit = SubmitField('Надіслати')
+
+
 # TODO: наслідування форм (наприклад, пароль-повтор пароля або додаткові поля у реєстрації та профілі)

@@ -33,7 +33,7 @@
                                 <a class="nav-link text-dark" href="{{ url_for('posts.index') }}">Новини</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" href="{{ url_for('contact.index') }}">Зв'язатися з нами</a>
+                                <a class="nav-link text-dark" href="{{ url_for('contact.index') }}">Зв'язатися</a>
                             </li>
                             {# All items below #} <li class="nav-item ms-auto"></li> {# will be right-sided #}
                             <li class="nav-item">
@@ -68,6 +68,15 @@
     <div class="container-lg">
         {% for classes, message in get_flashed_messages(with_categories=True) %}
             <div class="alert alert-{{ classes }} message">{{ message | safe }}</div>
+        {% endfor %}
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% endfor %}
         {% block content %}
         {% endblock %}

@@ -69,6 +69,15 @@
         {% block content %}
         {% endblock %}
     </div>
+    {% for field in form %}
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <div class="alert alert-danger">
+                    {{ error }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endfor %}
 </div>
 <footer class="text-center p-0 bg-light text-muted border-top mt-3">
     <div class="text-center bg-light m-0 p-2">

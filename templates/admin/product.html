@@ -11,15 +11,6 @@
 {% endblock %}
 {% block title %}Редагування{% endblock %}
 {% block content %}
-    {% for field in form %}
-        {% if field.errors %}
-            {% for error in field.errors %}
-                <div class="alert alert-danger">
-                    {{ error }}
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endfor %}
     <div class="mx-auto col-xxl-6 col-xl-7 col-lg-8 col-md-10 col-sm-12">
         <a class="btn btn-danger w-100" href="{{ url_for('admin.products') }}">Відміна</a>
         <h1 class="display-6 d-inline-block">Товар</h1><span class="text-muted small float-end">#{{ product.id if product else '---'}}</span>
