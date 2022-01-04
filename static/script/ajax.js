@@ -36,18 +36,23 @@ function populateSearch(data) {
     }
 
     for (let select of selects) {
+        let default_ = true
         for (let option of select.options) {
             if (option.value === searchParams.get(select.getAttribute('name'))) {
                 select.options.selectedIndex = option.index;
+                default_ = false
                 break;
             }
         }
-        setUrlParam(select.getAttribute('name'), select.options.item(select.options.selectedIndex).value);
+        if (default_)
+            select.options.selectedIndex = 0
+        setUrlParam(select.getAttribute('name'), select.options.item(select.options.selectedIndex).value, true);
     }
 }
 
 
 window.onpopstate = (e) => {
+    populateSearch(currentSearchJSON())
     loadPage(getUrlParam('page'), true)
 }
 
@@ -89,7 +94,7 @@ function getUrlParam(param) {
     return urlParams.get(param);
 }
 
-// TODO: fix spamming history pushes.
+
 function loadPage(page=-1, popstate=false, target=null){
     if (csrf_token === null)
         csrf_token = document.querySelector('meta[name="csrf-token"]').content;
@@ -130,7 +135,7 @@ function loadPage(page=-1, popstate=false, target=null){
             page = 1;
         }
         if (!popstate)
-            setUrlParam('page', page);
+            setUrlParam('page', page, true);
     }
     container.classList.remove('animate__fadeIn')
     container.classList.add('animate__fadeOut')
