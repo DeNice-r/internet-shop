@@ -20,8 +20,17 @@ class Appeal(db.Model):
     def __init__(self, title, content, firstname, phone, email):
         self.title = title
         self.content = content
-        self.firstname = firstname
-        self.phone = phone
-        self.email = email
+        if firstname:
+            self.firstname = firstname
+        else:
+            self.firstname = current_user.firstname
+        if phone:
+            self.phone = phone
+        else:
+            self.phone = current_user.phone
+        if email:
+            self.email = email
+        else:
+            self.email = current_user.email
         self.customer = current_user.id
         print(current_user.id)

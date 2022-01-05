@@ -4,35 +4,38 @@
     {{ super() }}
     <script type="text/javascript" src="{{ url_for('static', filename='script/ajax.js') }}" defer></script>
 {% endblock %}
-{% block title %}Товари{% endblock %}
+{% block title %}Замовлення{% endblock %}
 {% block content %}
     <table class="table table-sm table-responsive table-bordered table-striped table-light table-hover mb-3">
         <thead>
         <tr>
             <th>#</th>
             <th>ID</th>
-            <th>Фото</th>
-            <th>Назва</th>
-            <th>Опис</th>
-            <th>Ціна</th>
-            <th>Знижка</th>
-            <th>В наявності</th>
-            <th>Характеристики</th>
-            <th>Востаннє оновлено</th>
-            <th><a class="btn btn-success" href="{{ url_for('.product') }}">➕</a></th>
+            <th>Клієнт</th>
+            <th>Коментар</th>
+            <th>Телефон</th>
+            <th>Ім'я</th>
+            <th>Місто</th>
+            <th>Адреса</th>
+            <th>Замовлення</th>
+            <th>Сума</th>
+            <th>Статус</th>
+            <th>Створено</th>
         </tr>
         <tr>
-            <form>
+            <form id="search_form">
                 <th></th>
                 <th><input name="id" type="text"></th>
-                <th></th>
-                <th><input name="title" type="text"></th>
-                <th><input name="desc" type="text"></th>
-                <th><input name="price" type="text"></th>
-                <th><input name="discount" type="text"></th>
-                <th><input name="stock" type="text"></th>
-                <th><input name="specs" type="text"></th>
-                <th><input name="updated" type="text"></th>
+                <th><input name="customer" type="text"></th>
+                <th><input name="comment" type="text"></th>
+                <th><input name="phone" type="text"></th>
+                <th><input name="firstname" type="text"></th>
+                <th><input name="settlement" type="text"></th>
+                <th><input name="address" type="text"></th>
+                <th><input name="products" type="text"></th>
+                <th><input name="final_price" type="text"></th>
+                <th><input name="status" type="text"></th>
+                <th><input name="created" type="text"></th>
                 <th>
                     <select name="items_per_page" id="items_per_page_selector" class="form-control" title="Кількість записів на сторінці">
                         <option value="20" selected>20</option>

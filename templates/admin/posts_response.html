@@ -1,0 +1,22 @@
+{% for post in posts %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ post.id }}</td>
+        <td style="width: 100px">
+            {% if post.picture %}
+                <img src="{{ url_for('static', filename=config['POST_UPLOAD_FOLDER'] + '/' + post.picture) }}"
+                     class="d-block w-100"
+                     alt="{{ post.title }}"/>
+            {% endif %}
+        </td>
+        <td>{{ post.title }}</td>
+        <td>{{ post.content|truncate(600) }}</td>
+        <td>{{ post.author }}</td>
+        <td>{{ post.updated }}</td>
+        <td>{{ post.created }}</td>
+        <td>
+            <a class="btn btn-info" href="{{ url_for('admin.post', post_id=post.id) }}">✏</a>
+            <a class="btn btn-danger" href="{{ url_for('admin.post', post_id=post.id, delete='1') }}">🗑</a>
+        </td>
+    </tr>
+{% endfor %}

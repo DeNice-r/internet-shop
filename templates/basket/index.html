@@ -28,7 +28,6 @@
                             <span class="very-small text-muted">#{{ product.id }}</span>
                         </td>
                         <td class="col-3">
-        {#                    <button class="btn p-0" onclick="removeOneFromBasket({{ product.id }})">➖</button>#}
                             <div class="d-inline-block">
                                 <input type="number"
                                        onchange="setBasketItem(this, {{ product.id }})"
@@ -39,7 +38,6 @@
                                        max="{{ product.stock }}"
                                        title="Кількість одиниць цього товару">
                             </div>
-        {#                    <button class="btn p-0" onclick="addToBasket({{ product.id }})">➕</button>#}
                         </td>
                         <td class="col-1">
                             {% set localsum = basket[product.id | string] * (product.price - product.discount) %}

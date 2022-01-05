@@ -83,7 +83,7 @@
                         {% else %}
                             ₴{{ product.price }}
                         {% endif %}
-                        <a class="btn btn-success float-end col-12 col-md-4 mb-3" onmousedown="addToBasket({{ product.id }})">Додати у корзину</a>
+                        <a class="btn btn-success float-end col-12 col-md-4 mb-3 {{ 'disabled' if not product.in_stock() }}" onmousedown="addToBasket({{ product.id }})">Додати у корзину</a>
                     </p>
                 </div>
             </div>

@@ -1,7 +1,4 @@
-import time
-
-from flask import render_template, request, Blueprint, jsonify, flash, redirect, url_for
-from flask_login import current_user
+from flask import render_template, request, Blueprint, jsonify, redirect, url_for
 from models.product import Product
 from math import ceil
 from multidict import MultiDict
@@ -68,14 +65,3 @@ def get_products():
 @products.route("/product/<int:product_id>", methods=('GET', 'POST'))
 def product(product_id: int):
     return render_template("products/product.html", product=Product.query.get(product_id))
-
-
-# Deprecated?
-# @products.route("/api/product/<int:product_id>", methods=('POST',))
-# def api_product(product_id: int):
-#     return render_template("products/product.html", product=Product.query.get(product_id))
-#
-#
-# @products.route("/api/get_product/<int:product_id>")
-# def get_product(product_id: int):
-#     return Product.query.get(product_id).as_json_response()

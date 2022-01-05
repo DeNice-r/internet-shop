@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, TelField, EmailField, PasswordField, SubmitField, IntegerField, TextAreaField,\
-    MultipleFileField, FloatField, HiddenField, FileField
+    MultipleFileField, FloatField, HiddenField, FileField, BooleanField
 from wtforms.validators import DataRequired, Optional, Length, EqualTo
 
 
@@ -11,6 +11,7 @@ class UserForm(FlaskForm):
     email = EmailField('Електронна пошта', validators=[DataRequired("Електронна пошта - обов'язкове поле!"),
                                                        Length(5, 320, "Пошта недопустимої довжини! (допустима "
                                                                       "довжина від 5 до 320 символів)")])
+    roles = HiddenField()
     new_password = PasswordField('Новий Пароль', validators=[Optional(),
                                                              Length(8, 64, "Новий пароль недопустимої довжини! "
                                                                            "(допустима довжина від 8 до 64 символів)."),
@@ -54,3 +55,15 @@ class PostForm(FlaskForm):
     content = TextAreaField('Текст', validators=[DataRequired("Текст новини - обов'язкове поле!")])
     picture = FileField('Картинка')
     submit = SubmitField('Зберегти')
+
+
+class AppealForm(FlaskForm):
+    support_comment = TextAreaField('Коментар підтримки')
+    closed = BooleanField('Звернення закрито')
+    submit = SubmitField('Зберегти')
+
+
+class OrderForm(FlaskForm):
+    status = HiddenField()
+    submit = SubmitField('Зберегти')
+

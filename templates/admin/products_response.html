@@ -1,0 +1,24 @@
+{% for product in products %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ product.id }}</td>
+        <td style="width: 100px">
+            {% if product.pictures %}
+                <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}"
+                     class="d-block w-100"
+                     alt="{{ product.title }}"/>
+            {% endif %}
+        </td>
+        <td>{{ product.title }}</td>
+        <td>{{ product.price }}</td>
+        <td>{{ product.discount }}</td>
+        <td>{{ product.stock }}</td>
+        <td>{{ product.specs }}</td>
+        <td>{{ product.desc }}</td>
+        <td>{{ product.updated }}</td>
+        <td>
+            <a class="btn btn-info" href="{{ url_for('admin.product', product_id=product.id) }}">✏</a>
+            <a class="btn btn-danger" href="{{ url_for('admin.product', product_id=product.id, delete='1') }}">🗑</a>
+        </td>
+    </tr>
+{% endfor %}

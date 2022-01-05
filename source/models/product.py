@@ -37,6 +37,11 @@ class Product(db.Model):
         self.stock -= number
         return number * (self.price - self.discount)
 
+    def acquired(self, number: int):
+        if number <= 0:
+            raise ValueError
+        self.stock += number
+
     def in_specs(self, text: str):
         for spec in self.specs:
             if text in spec or text in self.specs[spec]:

@@ -45,11 +45,19 @@ class Order(db.Model):
         self.final_price = round(self.final_price, 2)
         db.session.commit()
 
+    def set_status(self, status: int):
+        if self.status != -1 and status == -1:
+            for p in self.products:
+                Product.query.get(p).acquired(self.products[p])
+        if self.status == -1 and status != -1:
+            for p in self.products:
+                Product.query.get(p).bought(self.products[p])
+        self.status = status
+
     def get_status_string(self):
         return order_status[self.status]
 
     def get_status_color(self):
         first = hex(int(255 - (self.status) * 255 / len(order_status)))[2:]
         second = hex(int((self.status) * 255 / len(order_status)))[2:]
-        print(first,second)
         return '#' + (first if len(first) == 2 else '00') + (second if len(second) == 2 else '00') + 'ff'

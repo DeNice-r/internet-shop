@@ -1,0 +1,18 @@
+{% for appeal in appeals %}
+    <tr>
+        <td>{{ loop.index }}</td>
+        <td>{{ appeal.id }}</td>
+        <td>{{ appeal.title }}</td>
+        <td>{{ appeal.content|truncate(600) }}</td>
+        <td>{{ appeal.customer }}</td>
+        <td>{{ appeal.phone }}</td>
+        <td>{{ appeal.email }}</td>
+        <td>{{ appeal.firstname }}</td>
+        <td>{{ appeal.support_comment|truncate(600) if appeal.support_comment }}</td>
+        <td>{{ '➕' if appeal.closed else '➖' }}</td>
+        <td>{{ appeal.created }}</td>
+        <td>
+            <a class="btn btn-info" href="{{ url_for('admin.appeal', appeal_id=appeal.id) }}">✏</a>
+        </td>
+    </tr>
+{% endfor %}

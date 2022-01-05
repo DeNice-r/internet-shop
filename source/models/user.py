@@ -62,6 +62,10 @@ def user_loader(user_id):
 
 class AnonymousUser(AnonymousUserMixin):
     id = None
+    firstname = None
+    settlement = None
+    phone = None
+    email = None
 
     def has_role(self, role):
         return False
