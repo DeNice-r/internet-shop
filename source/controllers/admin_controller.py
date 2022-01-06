@@ -50,6 +50,8 @@ def any_role_required(roles):
 @admin.route("/admin", methods=('GET', 'POST'))
 @any_role_required(('admin', 'editor', 'support', 'seller'))
 def index():
+    from app import app
+    print(app.config['SERVER_NAME'])
     return render_template('admin/index.html')
 
 

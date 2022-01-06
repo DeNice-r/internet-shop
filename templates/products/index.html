@@ -20,11 +20,11 @@
             {% endif %}
         </div>
         <div class="card-body">
-            <form class="row row-cols-auto g-1 align-items-center col-12" method="get" id="search_form">
-                <div class="col-3">
+            <form class="row row-cols-auto g-1 " method="get" id="search_form">
+                <div class="col-xl-6 col-lg-6 col-12">
                     <input type="text" name="q" class="form-control" placeholder="Я шукаю..." title="Частина назви товару, його повна назва, частина опису або ID">
                 </div>
-                <div class="col-2">
+                <div class="col-xl-3 col-6">
                     <select name="order_by" class="form-control" title="За яким параметром сортувати товари">
                         <option value="1" selected>За новизною</option>
                         <option value="2">За алфавітом</option>
@@ -32,19 +32,19 @@
                         <option value="4">За знижкою</option>
                     </select>
                 </div>
-                <div class="col-2">
+                <div class="col-xl-3 col-lg-6 col-6">
                     <select name="order" class="form-control" title="У якому порядку сортуються товари">
                         <option value="0" selected>За спаданням</option>
                         <option value="1">За зростанням</option>
                     </select>
                 </div>
-                <div class="col-3">
+                <div class="col-xl-5 col-lg-6 col-9">
                     <div class="input-group">
                         <input type="text" name="price_from" class="form-control" placeholder="Ціна від" title="Найнижча ціна шуканого товару">
                         <input type="text" name="price_to" class="form-control" placeholder="До" title="Найвища ціна шуканого товару">
                     </div>
                 </div>
-                <div class="col-1">
+                <div class="col-xl-1 col-3">
                     <select name="items_per_page" class="form-control" title="Кількість товарів на сторінці">
                         <option value="16" selected>16</option>
                         <option value="8">8</option>
@@ -52,8 +52,8 @@
                         <option value="40">40</option>
                     </select>
                 </div>
-                <div class="col-1">
-                    <input type="submit" class="btn btn-primary" value="Шукати">
+                <div class="col-xl-6 col-lg-9 col-12">
+                    <input type="submit" class="btn btn-primary w-100" value="Шукати">
                 </div>
             </form>
         </div>

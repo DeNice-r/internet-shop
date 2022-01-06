@@ -93,7 +93,8 @@ def register():
             token = generate_confirmation_token(new_user.email)
             confirm_url = url_for('.confirm', token=token, _external=True)
             send_email(new_user.email, "Підтвердження пошти",
-                       render_template('auth/mails/email_confirmation.html', confirm_url=confirm_url))
+                       render_template('auth/mails/email_confirmation.html', confirm_url=confirm_url,
+                                       profile_name=new_user.username))
             flash('Реєстрація успішна. Будь-ласка активуйте пошту та авторизуйтеся.', 'success')
             return redirect(url_for('.login'))
         else:
@@ -136,7 +137,8 @@ def resend_confirmation(token):
         if not user.confirmed:
             token = generate_confirmation_token(email)
             confirm_url = url_for('.confirm', token=token, _external=True)
-            html = render_template('auth/mails/email_confirmation.html', confirm_url=confirm_url)
+            html = render_template('auth/mails/email_confirmation.html', confirm_url=confirm_url,
+                                   profile_name=user.username)
             subject = "Підтвердження пошти"
             send_email(user.email, subject, html)
             flash('Новий лист для підтвердження відправлено.', 'success')
@@ -173,9 +175,11 @@ def forgot_password_send():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
         if user:
-            change_url = url_for('.forgot_password_change', token=generate_confirmation_token(user.username), _external=True)
-            send_email(user.email, 'Відновлення аккаунта на KIShop', render_template('auth/mails/forgot_password.html',
-                                                                                     change_url=change_url))
+            change_url = url_for('.forgot_password_change', token=generate_confirmation_token(user.username),
+                                 _external=True)
+            send_email(user.email, 'Відновлення профіля на KIShop', render_template('auth/mails/forgot_password.html',
+                                                                                    change_url=change_url,
+                                                                                    profile_name=user.username))
         flash('Лист з посиланням для відновлення надіслано.', 'success')
         return redirect(url_for('.login'))
     return render_template('auth/forgot_password_send.html', form=form)

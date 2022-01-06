@@ -2,5 +2,5 @@
 {{ super() }}
 {% block title %}Помилка{% endblock %}
 {% block content %}
-    <img class="d-block rounded mx-auto my-auto" src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + error + '.png') }}" alt="{{ error }}"/>
+    <img class="d-block rounded mx-auto my-auto col-xxl-8 col-xl-9 col-lg-10 col-md-11 col-sm-12" src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + error + '.png') }}" alt="{{ error }}"/>
 {% endblock %}
