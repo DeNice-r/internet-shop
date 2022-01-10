@@ -87,17 +87,3 @@ app.config['WTF_CSRF_ENABLED'] = True
 # Створення CSRF-захисту для AJAX-запитів
 csrf = CSRFProtect(app)
 
-
-# Додання контексту у темплейти
-# @app.context_processor
-# def inject_app():
-#     return {'app': app}
-
-
-# @app.context_processor
-# def inject_user():
-#     return {'user': current_user}
-
-
-# TODOs:
-

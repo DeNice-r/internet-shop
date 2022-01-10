@@ -10,11 +10,11 @@
             {% endif %}
         </td>
         <td>{{ product.title }}</td>
+        <td>{{ product.desc }}</td>
         <td>{{ product.price }}</td>
         <td>{{ product.discount }}</td>
         <td>{{ product.stock }}</td>
         <td>{{ product.specs }}</td>
-        <td>{{ product.desc }}</td>
         <td>{{ product.updated }}</td>
         <td>
             <a class="btn btn-info" href="{{ url_for('admin.product', product_id=product.id) }}">✏</a>

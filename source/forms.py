@@ -104,7 +104,7 @@ class OrderForm(FlaskForm):
     comment = TextAreaField('Коментар', validators=[Optional(),
                                                     Length(0, 500, "Коментар недопустимої довжини! "
                                                                    "(допустима довжина до 500 символів).")])
-    submit = SubmitField('Зберегти')
+    submit = SubmitField('Замовити')
 
 
 class AppealForm(FlaskForm):

@@ -1,5 +1,4 @@
 import datetime
-
 from app import app, db
 from flask import render_template, redirect, flash, request, url_for, Blueprint
 from forms import *

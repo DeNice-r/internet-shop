@@ -1,5 +1,6 @@
-let basket = null; syncBasket();
-let basketItems = document.querySelector('tbody#basketItems');
+let basket = null; syncBasket(),
+    basketItems = document.querySelector('tbody#basketItems'),
+    basketNumber = document.querySelector('#basketNumber');
 
 document.addEventListener('load', syncBasket);
 
@@ -11,16 +12,22 @@ function syncBasket() {
         } catch (e) {
             basket = {}
         }
-    else {
-        document.cookie = 'basket=' + JSON.stringify(basket) + '; path=/;';
-        let sum = 0;
-        try {
-            for (let elem of basketItems.querySelectorAll('.local-sum')) {
-                sum += +elem.textContent.slice(1);
-            }
-            document.querySelector('#overall-sum').textContent = '₴' + sum.toFixed(2);
-        } catch (e) {}
-    }
+    document.cookie = 'basket=' + JSON.stringify(basket) + '; path=/;';
+    let sum = 0;
+    try {
+        let basketList = basketItems.querySelectorAll('.local-sum');
+        for (let elem of basketList) {
+            sum += +elem.textContent.slice(1);
+        }
+        document.querySelector('#overall-sum').textContent = '₴' + sum.toFixed(2);
+    } catch (e) {}
+    let len = Object.entries(basket).length;
+    try {
+        if (len > 0)
+            basketNumber.innerHTML = '(' + len + ')';
+        else
+            basketNumber.innerHTML = '';
+    } catch (e) {}
 }
 
 

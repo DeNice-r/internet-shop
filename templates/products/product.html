@@ -2,7 +2,6 @@
 {{ super() }}
 {% block script %}
     {{ super() }}
-    <script type="text/javascript" src="{{ url_for('static', filename='script/basket.js') }}" defer></script>
     <script type="text/javascript" src="{{ url_for('static', filename='script/user_product.js') }}" defer></script>
 {% endblock %}
 {% block title %}{{ product.title }}{% endblock %}

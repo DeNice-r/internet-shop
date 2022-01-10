@@ -18,7 +18,7 @@
 <div class="min-vh-100">
     {% block navbar %}
         <header class="mb-3">
-            <nav class="navbar navbar-expand-xl navbar-light bg-light border-bottom box-shadow">
+            <nav class="navbar navbar-expand-xxl navbar-light bg-light border-bottom box-shadow">
                 <div class="container-lg">
                     <a class="navbar-brand" href="{{ url_for('products.index') }}"><img src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'favicon.ico') }}" style="width: 35px; height: 35px;" alt="..."></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,8 +36,8 @@
                                 <a class="nav-link text-dark" href="{{ url_for('contact.index') }}">Зв'язатися</a>
                             </li>
                             {# All items below #} <li class="nav-item ms-auto"></li> {# will be right-sided #}
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="{{ url_for('basket.index') }}">Корзина</a>
+                            <li class="nav-item me-1">
+                                <a class="nav-link d-inline-block text-dark m-0" href="{{ url_for('basket.index') }}">Корзина <span class="me-0" id="basketNumber"></span></a>
                             </li>
                             {% if current_user.is_authenticated %}
                                 {% if current_user.has_any_role('admin', 'editor', 'support', 'seller') %}

@@ -1,10 +1,6 @@
 {% extends "shared/layout.html" %}
 {{ super() }}
 {% block title %}Корзина{% endblock %}
-{% block script %}
-    {{ super() }}
-    <script type="text/javascript" src="{{ url_for('static', filename='script/basket.js') }}" defer></script>
-{% endblock %}
 {% block content %}
     <div class="mx-auto col-12 col-lg-11 col-xl-10 col-xxl-9">
         {% if basket %}
@@ -20,7 +16,7 @@
                                      class="d-block w-100"
                                      alt="{{ product.title }}"/>
                             </td>
-                            <td class="col-8 m-0">
+                            <td class="col-7 m-0">
                                 <span class="col-12 d-inline-block">
                                     <a class="d-inline-block card-title link m-0" href="{{ url_for('products.product', product_id=product.id) }}">
                                         <h5 class="m-0 card-title">{{ product.title }}</h5>
@@ -28,8 +24,8 @@
                                 </span>
                                 <span class="very-small text-muted">#{{ product.id }}</span>
                             </td>
-                            <td class="col-3">
-                                <div class="d-inline-block">
+                            <td class="col-2">
+                                <div class="d-inline-block w-100">
                                     <input type="number"
                                            onchange="setBasketItem(this, {{ product.id }})"
                                            oninput="setBasketItem(this, {{ product.id }})"

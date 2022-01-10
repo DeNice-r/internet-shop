@@ -50,8 +50,6 @@ def any_role_required(roles):
 @admin.route("/admin", methods=('GET', 'POST'))
 @any_role_required(('admin', 'editor', 'support', 'seller'))
 def index():
-    from app import app
-    print(app.config['SERVER_NAME'])
     return render_template('admin/index.html')
 
 
@@ -73,13 +71,17 @@ def get_products():
     if search.get('desc'):
         p = p.filter(func.lower(Product.desc).contains(func.lower(search['desc'])))
     if search.get('price'):
-        p = p.filter(func.lower(Product.price).contains(func.lower(search['price'])))
+        p = p.filter(Product.price == float(search['price']))
     if search.get('discount'):
-        p = p.filter(func.lower(Product.discount).contains(func.lower(search['discount'])))
+        p = p.filter(Product.discount == float(search['discount']))
     if search.get('stock'):
-        p = p.filter(func.lower(Product.stock).contains(func.lower(search['stock'])))
+        p = p.filter(Product.stock == int(search['stock']))
     if search.get('specs'):
-        p = p.filter(func.lower(Product.specs).contains(func.lower(search['specs'])))
+        r = []
+        for product_ in p:
+            if search['specs'] in str(product_.specs):
+                r.append(product_)
+        p = r
     if search.get('updated'):
         r = []
         for product_ in p:

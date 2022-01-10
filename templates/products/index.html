@@ -8,7 +8,6 @@
 {% block script %}
     {{ super() }}
     <script type="text/javascript" src="{{ url_for('static', filename='script/ajax.js') }}" defer></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='script/basket.js') }}" defer></script>
 {% endblock %}
 {% block title %}Товари{% endblock %}
 {% block content %}
@@ -22,7 +21,7 @@
         <div class="card-body">
             <form class="row row-cols-auto g-1 " method="get" id="search_form">
                 <div class="col-xl-6 col-lg-6 col-12">
-                    <input type="text" name="q" class="form-control" placeholder="Я шукаю..." title="Частина назви товару, його повна назва, частина опису або ID">
+                    <input type="text" name="q" id="query" class="form-control" placeholder="Я шукаю..." title="Частина назви товару, його повна назва, частина опису або ID">
                 </div>
                 <div class="col-xl-3 col-6">
                     <select name="order_by" class="form-control" title="За яким параметром сортувати товари">
@@ -66,4 +65,13 @@
     </div>
     <div id="ajax-content" class="animate__animated"></div>
     <div id="ajax-pagination"></div>
+    <script>
+        document.querySelector('#query').addEventListener('input', () => {
+            console.log(1)
+            let e = new Event('submit');
+            form.dispatchEvent(e);
+        })
+    </script>
+
+
 {% endblock %}
