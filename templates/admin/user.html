@@ -63,7 +63,7 @@
                     {{ form.confirm_password.label }} {{ form.confirm_password(class_="form-control") }}
                 </div>
             </div>
-            {{ form.phone.label }} {{ form.phone(class_="form-control mb-3") }}
+            {{ form.phone.label }} {{ form.phone(class_="form-control mb-3", placeholder='+380XXXXXXXXX', pattern='^\+?3?8?(0\d{9})$') }}
             {{ form.firstname.label }} {{ form.firstname(class_="form-control mb-3") }}
             {{ form.settlement.label }} {{ form.settlement(class_="form-control mb-3") }}
             {{ form.address.label }} {{ form.address(class_="form-control mb-2") }}

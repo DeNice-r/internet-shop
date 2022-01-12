@@ -17,9 +17,10 @@ class UserForm(FlaskForm):
                                                                            "(допустима довжина від 8 до 64 символів)."),
                                                              EqualTo('confirm_password', 'Паролі повинні співпадати!')])
     confirm_password = PasswordField('Підтвердження пароля', validators=[Optional(), Length(8, 64)])
-    phone = TelField('Мобільний телефон', validators=[Optional(),
-                                                      Length(9, 13, "Телефон недопустимої довжини! (допустима довжина "
-                                                                    "від 9 до 13 символів).")])
+    phone = TelField('Мобільний телефон',
+                     validators=[Optional(),
+                                 Length(9, 13, "Телефон недопустимої довжини! (допустима довжина від 9 до 13 символів)"
+                                               ".")])
     firstname = StringField("Ім'я", validators=[Optional(), Length(0, 50, "Ім'я недопустимої довжини! (допустима "
                                                                           "довжина до 50 символів).")])
     settlement = StringField('Населений пункт', validators=[Optional(),

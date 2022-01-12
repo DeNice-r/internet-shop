@@ -3,11 +3,11 @@
         <td>{{ loop.index }}</td>
         <td>{{ user.id }}</td>
         <td>{{ user.username }}</td>
-        <td>{{ user.email }}</td>
+        <td>{{ user.email|truncate(6) }}</td>
         <td>{{ user.firstname }}</td>
-        <td>{{ user.phone }}</td>
+        <td>{{ user.phone|truncate(6) }}</td>
         <td>{{ user.settlement }}</td>
-        <td>{{ user.address }}</td>
+        <td>{{ user.address|truncate(10) }}</td>
         <td>{{ ', '.join(user.roles) }}</td>
         <td>{{ user.registered_on }}</td>
         <td>{{ user.last_login }}</td>
