@@ -41,7 +41,6 @@ def index():
             basket_[p] = products[-1].stock
 
     form = OrderForm()
-    form.process(obj=current_user)
 
     if form.validate_on_submit():
         response = None
@@ -65,6 +64,8 @@ def index():
             response = make_response(redirect(url_for('products.index')))
         response.delete_cookie('basket')
         return response
+    else:
+        form.process(obj=current_user)
     return render_template("basket/index.html", basket=basket_, products=products, form=form)
 
 
