@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, jsonify, redirect, url_for
+from flask import render_template, request, Blueprint, jsonify, redirect, url_for, session
 from models.product import Product
 from math import ceil
 from multidict import MultiDict

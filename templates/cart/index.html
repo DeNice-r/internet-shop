@@ -1,0 +1,37 @@
+{% extends "shared/layout.html" %}
+{{ super() }}
+{% block title %}Кошик{% endblock %}
+{% block content %}
+    <div class="mx-auto col-12 col-lg-11 col-xl-10 col-xxl-9">
+        <div id="cart-nonempty" class="mx-auto" hidden>
+            <div class="mx-auto"><h5 class="d-inline-block">Ваше замовлення</h5><button class="btn" onclick="clearCart()">🗑</button></div>
+            <div id="ajax-content" class="m-0"></div>
+            <div class="mb-3">
+                <button class="btn btn-secondary w-100 mb-3" type="button" data-bs-toggle="collapse" data-bs-target="#specCollapse" aria-expanded="false" aria-controls="specCollapse">
+                    Завершити замовлення
+                </button>
+                <div id="specCollapse" class="collapse">
+                    <form method="post" enctype="multipart/form-data">
+                        {{ form.hidden_tag() }}
+                        {{ form.phone.label }} {{ form.phone(class_="form-control mb-3", placeholder='+380XXXXXXXXX', pattern='^\+?3?8?(0\d{9})$') }}
+                        {{ form.firstname.label }} {{ form.firstname(class_="form-control mb-3") }}
+                        {{ form.settlement.label }} {{ form.settlement(class_="form-control mb-3") }}
+                        {{ form.address.label }} {{ form.address(class_="form-control mb-3") }}
+                        {{ form.comment.label }} {{ form.comment(class_="form-control mb-2") }}
+                        {{ form.submit(class_="w-100 px-auto btn btn-primary") }}
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="cart-empty" hidden>
+            <h5 class="text-center">Ви ще нічого не додали до кошика</h5>
+            <img id="cart-empty" class="d-block rounded mx-auto my-auto w-100" src="{{ url_for('static', filename=config['IMAGE_FOLDER'] + 'empty-cart.png') }}" alt="В кошику нічого немає"/>
+        </div>
+    </div>
+    <div id="ajax-spinner">
+        <div class="d-flex justify-content-center" hidden>
+            <div class="spinner-border text-primary">
+            </div>
+        </div>
+    </div>
+{% endblock %}

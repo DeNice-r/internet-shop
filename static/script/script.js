@@ -1,3 +1,6 @@
+let spinner = document.querySelector('#ajax-spinner');
+
+
 alerts = document.querySelectorAll('.alert');
 alerts.forEach((elem, index) => {
     setTimeout(() => {

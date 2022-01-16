@@ -1,7 +1,7 @@
 let csrf_token = null,
     container = document.querySelector('#ajax-content'),
-    pagination = document.querySelector('#ajax-pagination'),
-    spinner = document.querySelector('#ajax-spinner');
+    pagination = document.querySelector('#ajax-pagination');
+
 window.addEventListener('load', () => {loadPage();});
 
 let form = document.querySelector('form#search_form');

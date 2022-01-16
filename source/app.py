@@ -1,4 +1,6 @@
-from flask import Flask
+import secrets
+
+from flask import Flask, session
 from dotenv import load_dotenv
 from os import getcwd, environ
 from flask_sqlalchemy import SQLAlchemy
@@ -86,4 +88,6 @@ app.config['WTF_CSRF_ENABLED'] = True
 
 # Створення CSRF-захисту для AJAX-запитів
 csrf = CSRFProtect(app)
+
+
 

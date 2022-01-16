@@ -9,7 +9,7 @@
                     <h5 class="d-inline-block">Ваше замовлення</h5><span class="text-muted small float-end">#{{ order.id }}</span>
                     <div>Сума: <span class="text-success">₴{{ order.final_price }}</span></div>
                     <div>Статус: <span style="color: {{ order.get_status_color() }};">{{ order.get_status_string() }}</span></div>
-                    <small>Унікальне посилання: <a class="link" href="{{ url_for('.order', order_token=order_token, _external=True) }}">{{ url_for('.order', order_token=order_token, _external=True) }}</a></small>
+                    <small>Унікальне посилання: <a class="link" href="{{ url_for('.get_order', order_token=order_token, _external=True) }}">{{ url_for('.get_order', order_token=order_token, _external=True) }}</a></small>
                 </div>
             </div>
         </div>

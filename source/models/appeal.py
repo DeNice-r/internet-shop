@@ -33,4 +33,3 @@ class Appeal(db.Model):
         else:
             self.email = current_user.email
         self.customer = current_user.id
-        print(current_user.id)

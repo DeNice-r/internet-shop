@@ -28,7 +28,7 @@
                             <span class="text-success {{ 'float-end' if product.discount }}"> {{ ("₴%.2f")|format(product.price - product.discount) }} </span>
                         </p>
                     </div>
-                    <a class="btn btn-success w-100 {{ 'disabled' if not product.in_stock() }}" onmousedown="addToBasket({{ product.id }})">Додати у корзину</a>
+                    <a class="btn btn-success w-100 {{ 'disabled' if not product.in_stock() }}" onmousedown="addToCart({{ product.id }})">Додати у корзину</a>
                     {% if current_user.has_role('editor') %}
                         <a class="btn btn-info w-100" href="{{ url_for('admin.product', product_id=product.id) }}">✏</a>
                         <a class="btn btn-danger w-100" href="{{ url_for('admin.product', product_id=product.id, delete=1) }}">🗑</a>

@@ -1,0 +1,47 @@
+{% if items|length > 0 %}
+    {% set sum = namespace(value=0) %}
+    <table class="table table-sm table-responsive mb-3">
+        <tbody  id="cartItems">
+        {% for product_id in items %}
+            {% set product = product_query.get(product_id) %}
+            <tr class="align-middle" product-id="{{ product.id }}" product-price="{{ product.price - product.discount }}">
+                <td class="col-1">
+                    <img src="{{ url_for('static', filename=config['PRODUCT_UPLOAD_FOLDER'] + '/' + product.pictures|first if product.pictures else config['IMAGE_FOLDER'] + 'placeholder.png') }}"
+                         class="d-block w-100"
+                         alt="{{ product.title }}"/>
+                </td>
+                <td class="col-6 m-0">
+                    <span class="col-12 d-inline-block">
+                        <a class="d-inline-block card-title link m-0" href="{{ url_for('products.product', product_id=product.id) }}">
+                            <h5 class="m-0 card-title">{{ product.title }}</h5>
+                        </a>
+                    </span>
+                    <span class="very-small text-muted">#{{ product.id }}</span>
+                </td>
+                <td class="col-4">
+                    <button class="btn p-0" onclick="removeOneFromCart({{ product.id }})">➖</button>
+                    <div class="d-inline-block col-6">
+                        <input type="text"
+                               onchange="setCartItem(this, {{ product.id }})"
+{#                               oninput="setCartItem(this, {{ product.id }})"#}
+                               class="row-cols-1 form-control"
+                               value="{{ items[product_id] }}"
+                               title="Кількість одиниць цього товару">
+                    </div>
+                    <button class="btn p-0" onclick="addToCart({{ product.id }})">➕</button>
+                </td>
+                <td class="col-1">
+                    {% set localsum = items[product_id] * (product.price - product.discount) %}
+                    <span class="text-success local-sum">{{ ("₴%.2f")|format(localsum) }}</span>
+                    {% set sum.value = sum.value + localsum %}
+                </td>
+                <td class="col-1">
+                    <button onclick="removeFromCart({{ product.id }})" class="btn">🗑</button>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <span class="float-end text-success fw-bold" id="overall-sum">{{ ("₴%.2f")|format(sum.value) }}</span>
+{% endif %}

@@ -37,7 +37,7 @@
                             </li>
                             {# All items below #} <li class="nav-item ms-auto"></li> {# will be right-sided #}
                             <li class="nav-item me-1">
-                                <a class="nav-link d-inline-block text-dark m-0" href="{{ url_for('basket.index') }}">Корзина <span class="me-0" id="basketNumber"></span></a>
+                                <a class="nav-link d-inline-block text-dark m-0" href="{{ url_for('cart.index') }}">Кошик</a>
                             </li>
                             {% if current_user.is_authenticated %}
                                 {% if current_user.has_any_role('admin', 'editor', 'support', 'seller') %}
